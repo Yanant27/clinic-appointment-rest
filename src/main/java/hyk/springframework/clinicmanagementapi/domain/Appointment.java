@@ -13,13 +13,10 @@ import javax.persistence.*;
 @Data
 @Entity
 public class Appointment extends BaseEntity {
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne
     private Patient patient;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
-    private Doctor doctor;
-
-    @OneToOne(cascade = CascadeType.MERGE)
+    @OneToOne
     private Schedule schedule;
 
     @Enumerated(EnumType.STRING)

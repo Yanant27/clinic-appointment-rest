@@ -42,10 +42,10 @@ public class BaseEntity {
 //    )
 //    @Type(type="org.hibernate.type.UUIDCharType")
 //    @Column(length = 36, columnDefinition = "varchar", updatable = false, nullable = false )
-    private Long id;
+    private Integer id;
 
     @Version
-    private Long version;
+    private Integer version;
 
     @CreationTimestamp
     @Column(updatable = false)

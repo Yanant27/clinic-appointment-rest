@@ -3,6 +3,7 @@ package hyk.springframework.clinicmanagementapi.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import java.util.List;
@@ -16,6 +17,6 @@ import java.util.List;
 public class Doctor extends PersonEntity {
     private String specialization;
 
-    @OneToMany(mappedBy = "doctor")
-    private List<Appointment> appointments;
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Schedule> schedules;
 }
