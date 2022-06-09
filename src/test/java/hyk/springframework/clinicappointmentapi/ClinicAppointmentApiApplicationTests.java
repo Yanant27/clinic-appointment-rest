@@ -1,10 +1,10 @@
-package hyk.springframework.clinicmanagementapi;
+package hyk.springframework.clinicappointmentapi;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ClinicManagementApiApplicationTests {
+class ClinicAppointmentApiApplicationTests {
 
     @Test
     void contextLoads() {
