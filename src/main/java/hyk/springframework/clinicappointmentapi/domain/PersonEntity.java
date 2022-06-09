@@ -1,4 +1,4 @@
-package hyk.springframework.clinicmanagementapi.domain;
+package hyk.springframework.clinicappointmentapi.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package hyk.springframework.clinicmanagementapi.domain;
+package hyk.springframework.clinicappointmentapi.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -42,7 +42,7 @@ public class BaseEntity {
 //    )
 //    @Type(type="org.hibernate.type.UUIDCharType")
 //    @Column(length = 36, columnDefinition = "varchar", updatable = false, nullable = false )
-    private Integer id;
+    private Long id;
 
     @Version
     private Integer version;
