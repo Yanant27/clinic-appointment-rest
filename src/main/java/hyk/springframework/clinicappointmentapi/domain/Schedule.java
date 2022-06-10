@@ -3,6 +3,7 @@ package hyk.springframework.clinicappointmentapi.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import hyk.springframework.clinicappointmentapi.enums.DoctorStatus;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -24,7 +25,7 @@ public class Schedule extends BaseEntity {
     private LocalTime endTime;
 
     @Enumerated(value = EnumType.STRING)
-    private DoctorStatus status;
+    private DoctorStatus doctorStatus;
 
     @ManyToOne
     private Doctor doctor;
@@ -33,9 +34,9 @@ public class Schedule extends BaseEntity {
     @JsonIgnore
     private List<Appointment> appointments;
 
-    public Schedule addAppointment(Appointment appointment) {
-        appointment.setSchedule(this);
-        this.appointments.add(appointment);
-        return this;
-    }
+//    public Schedule addAppointment(Appointment appointment) {
+//        appointment.setSchedule(this);
+//        this.appointments.add(appointment);
+//        return this;
+//    }
 }

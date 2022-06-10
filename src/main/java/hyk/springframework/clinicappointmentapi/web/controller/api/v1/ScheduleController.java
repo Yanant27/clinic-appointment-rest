@@ -1,0 +1,55 @@
+package hyk.springframework.clinicappointmentapi.web.controller.api.v1;
+
+import hyk.springframework.clinicappointmentapi.service.ScheduleService;
+import hyk.springframework.clinicappointmentapi.web.dto.ScheduleDTO;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.List;
+
+/**
+ * @author Htoo Yanant Khin
+ **/
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/api/v1/schedules")
+public class ScheduleController {
+    private final ScheduleService scheduleService;
+
+    @GetMapping
+    public ResponseEntity<List<ScheduleDTO>> showAllAppointments(
+            @RequestParam(name = "doctorId", required = false) Long doctorId) {
+        return new ResponseEntity<>(scheduleService.findAllSchedules(doctorId), HttpStatus.OK);
+    }
+
+    @GetMapping("/{scheduleId}")
+    public ResponseEntity<ScheduleDTO> showScheduleById(@PathVariable Long scheduleId) {
+        ScheduleDTO returnDto = scheduleService.findScheduleById(scheduleId);
+        return new ResponseEntity<>(returnDto, HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<ScheduleDTO> createSchedule(@RequestBody ScheduleDTO scheduleDTO) {
+        HttpHeaders headers = new HttpHeaders();
+        ScheduleDTO savedDto = scheduleService.saveNewSchedule(scheduleDTO);
+        headers.setLocation(UriComponentsBuilder.newInstance()
+                .path("/api/v1/schedules/{scheduleId}").buildAndExpand(savedDto.getId()).toUri());
+        return new ResponseEntity<>(savedDto, headers, HttpStatus.CREATED);
+
+    }
+
+    @PutMapping ("/{scheduleId}")
+    public ResponseEntity<ScheduleDTO> updateSchedule(@PathVariable Long scheduleId, @RequestBody ScheduleDTO scheduleDTO) {
+        return new ResponseEntity<>(scheduleService.updateSchedule(scheduleId, scheduleDTO), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{scheduleId}")
+    public ResponseEntity<Void> deleteAppointment(@PathVariable Long scheduleId) {
+        scheduleService.deleteScheduleById(scheduleId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+}

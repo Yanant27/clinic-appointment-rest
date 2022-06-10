@@ -8,7 +8,7 @@ import java.util.List;
  * @author Htoo Yanant Khin
  **/
 public interface AppointmentService {
-    List<AppointmentDTO> findAllAppointments();
+    List<AppointmentDTO> findAllAppointments(Long doctorId, Long patientId, Long scheduleId);
 
     AppointmentDTO findAppointmentById(Long appointmentId);
 

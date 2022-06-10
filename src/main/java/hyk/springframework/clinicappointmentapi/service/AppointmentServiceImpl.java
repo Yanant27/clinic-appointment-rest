@@ -8,8 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,8 +26,18 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final AppointmentMapper appointmentMapper;
 
     @Override
-    public List<AppointmentDTO> findAllAppointments() {
-        return appointmentRepository.findAll().stream()
+    public List<AppointmentDTO> findAllAppointments(Long doctorId, Long patientId, Long scheduleId) {
+        List<Appointment> appointments;
+        if (doctorId != null) {
+            appointments = appointmentRepository.findAllByDoctorId(doctorId);
+        } else if (patientId!= null) {
+            appointments = appointmentRepository.findAllByPatientId(patientId);
+        } else if (scheduleId != null) {
+            appointments = appointmentRepository.findAllByScheduleId(scheduleId);
+        } else {
+            appointments = appointmentRepository.findAll();
+        }
+        return appointments.stream()
                 .map(appointmentMapper::appointmentToAppointmentDto)
                 .collect(Collectors.toList());
     }

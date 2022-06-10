@@ -1,5 +1,6 @@
 package hyk.springframework.clinicappointmentapi.web.controller.api.v1;
 
+import hyk.springframework.clinicappointmentapi.enums.AppointmentStatus;
 import hyk.springframework.clinicappointmentapi.service.AppointmentService;
 import hyk.springframework.clinicappointmentapi.util.JsonStringUtil;
 import hyk.springframework.clinicappointmentapi.web.dto.AppointmentDTO;
@@ -34,7 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  **/
 @ExtendWith(MockitoExtension.class)
 public class AppointmentControllerTest {
-
     private final String BASE_URL = "/api/v1/appointments";
 
     @Mock
@@ -54,7 +54,7 @@ public class AppointmentControllerTest {
         appointmentDTOs.add(AppointmentDTO.builder()
                 .appointmentId(1L)
                 .appointmentDate(LocalDate.of(2022,7,7))
-                .appointmentStatus("BOOKED")
+                        .appointmentStatus(AppointmentStatus.BOOKED)
                 .scheduleId(3L)
                 .startTime(LocalTime.of(10,0))
                 .endTime(LocalTime.of(12,0))
@@ -63,24 +63,63 @@ public class AppointmentControllerTest {
         appointmentDTOs.add(AppointmentDTO.builder()
                 .appointmentId(2L)
                 .appointmentDate(LocalDate.of(2022,7,8))
-                .appointmentStatus("BOOKED")
-                .scheduleId(4L)
+                .appointmentStatus(AppointmentStatus.BOOKED)
+                .scheduleId(3L)
                 .startTime(LocalTime.of(12,0))
                 .endTime(LocalTime.of(13,0))
-                .doctorDTO(DoctorDTO.builder().id(11L).name("Dr. Nay Oo").address("Yangon").phoneNumber("09123456789").specialization("Internal Medicine").build())
-                .patientDTO(PatientDTO.builder().id(21L).name("Min Min").address("Yangon").phoneNumber("09987654321").build()).build());
+                .doctorDTO(DoctorDTO.builder().id(10L).name("Dr. Lin Htet").address("Mudon").phoneNumber("09123456789").specialization("Internal Medicine").build())
+                .patientDTO(PatientDTO.builder().id(21L).name("Hsu Hsu").address("Yangon").phoneNumber("09987654321").build()).build());
         
         mockMvc = MockMvcBuilders.standaloneSetup(appointmentController).build();
     }
 
-    @DisplayName("Display All Appointments")
+    @DisplayName("Display All Appointments - without request parameter")
     @Test
-    public void showAllAppointments_success() throws Exception {
-        when(appointmentService.findAllAppointments()).thenReturn(appointmentDTOs);
+    public void showAllAppointments_success_without_param() throws Exception {
+        when(appointmentService.findAllAppointments(null, null, null)).thenReturn(appointmentDTOs);
 
         mockMvc.perform(get(BASE_URL)
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+    }
+
+    @DisplayName("Display All Appointments - With Request Param, doctorId")
+    @Test
+    public void showAllAppointments_success_with_doctorId() throws Exception {
+        when(appointmentService.findAllAppointments(10L, null, null)).thenReturn(appointmentDTOs);
+
+        mockMvc.perform(get(BASE_URL)
+                        .param("doctorId", "10")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+    }
+
+    @DisplayName("Display All Appointments - With Request Param, patientId")
+    @Test
+    public void showAllAppointments_success_with_patientId() throws Exception {
+        when(appointmentService.findAllAppointments(null, 21L, null)).thenReturn(appointmentDTOs);
+
+        mockMvc.perform(get(BASE_URL)
+                        .param("patientId", "21")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+    }
+
+    @DisplayName("Display All Appointments - With Request Param, scheduleId")
+    @Test
+    public void showAllAppointments_success_with_scheduleId() throws Exception {
+        when(appointmentService.findAllAppointments(null, null, 3L)).thenReturn(appointmentDTOs);
+
+        mockMvc.perform(get(BASE_URL)
+                        .param("scheduleId", "3")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)));
     }
@@ -95,7 +134,7 @@ public class AppointmentControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.appointmentStatus", equalTo(appointmentDTO.getAppointmentStatus())))
+                .andExpect(jsonPath("$.appointmentStatus", equalTo(appointmentDTO.getAppointmentStatus().toString())))
                 .andExpect(jsonPath("$.doctorDTO.name", equalTo(appointmentDTO.getDoctorDTO().getName())))
                 .andExpect(jsonPath("$.patientDTO.name", equalTo(appointmentDTO.getPatientDTO().getName())))
                 .andExpect(jsonPath("$.appointmentDate", equalTo(appointmentDTO.getAppointmentDate().toString())));
@@ -125,8 +164,8 @@ public class AppointmentControllerTest {
         AppointmentDTO appointmentDTO = appointmentDTOs.get(0);
 
         AppointmentDTO savedDto = appointmentDTOs.get(0);
-        savedDto.setAppointmentStatus("CANCELLED");
-
+//        savedDto.setAppointmentStatus("CANCELLED");
+        savedDto.setAppointmentStatus(AppointmentStatus.CANCELLED);
         when(appointmentService.findAppointmentById(anyLong())).thenReturn(appointmentDTO);
         when(appointmentService.saveAppointment(appointmentDTO)).thenReturn(savedDto);
 

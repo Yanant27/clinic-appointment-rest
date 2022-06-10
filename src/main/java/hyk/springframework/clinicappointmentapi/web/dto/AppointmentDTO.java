@@ -30,7 +30,8 @@ public class AppointmentDTO {
     @JsonProperty("appointmentDate")
     private LocalDate appointmentDate;
 
-    private String appointmentStatus;
+//    private String appointmentStatus;
+    private AppointmentStatus appointmentStatus;
     private Long scheduleId;
 
     @JsonProperty("startTime")

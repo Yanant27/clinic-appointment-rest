@@ -21,7 +21,6 @@ public class PatientController {
     private final PatientService patientService;
 
     @GetMapping
-    @ResponseBody
     public ResponseEntity<List<PatientDTO>> showAllAppointments() {
         return new ResponseEntity<>(patientService.findAllPatients(), HttpStatus.OK);
     }
@@ -37,7 +36,7 @@ public class PatientController {
         HttpHeaders headers = new HttpHeaders();
         PatientDTO savedDto = patientService.saveNewPatient(patientDTO);
         headers.setLocation(UriComponentsBuilder.newInstance()
-                .path("/api/v1/Patients/{id}").buildAndExpand(savedDto.getId()).toUri());
+                .path("/api/v1/patients/{patientId}").buildAndExpand(savedDto.getId()).toUri());
         return new ResponseEntity<>(savedDto, headers, HttpStatus.CREATED);
 
     }

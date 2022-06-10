@@ -21,9 +21,11 @@ public class AppointmentController {
     private final AppointmentService appointmentService;
 
     @GetMapping
-    @ResponseBody
-    public ResponseEntity<List<AppointmentDTO>> showAllAppointments() {
-        return new ResponseEntity<>(appointmentService.findAllAppointments(), HttpStatus.OK);
+    public ResponseEntity<List<AppointmentDTO>> showAllAppointments(
+            @RequestParam(name = "doctorId", required = false) Long doctorId,
+            @RequestParam(name = "patientId", required = false) Long patientId,
+            @RequestParam(name = "scheduleId", required = false) Long scheduleId) {
+        return new ResponseEntity<>(appointmentService.findAllAppointments(doctorId, patientId, scheduleId), HttpStatus.OK);
     }
 
     @GetMapping("/{appointmentId}")
@@ -37,7 +39,7 @@ public class AppointmentController {
         HttpHeaders headers = new HttpHeaders();
         AppointmentDTO savedDto = appointmentService.saveAppointment(appointmentDTO);
         headers.setLocation(UriComponentsBuilder.newInstance()
-                .path("/api/v1/appointments/{id}").buildAndExpand(savedDto.getAppointmentId()).toUri());
+                .path("/api/v1/appointments/{appointmentId}").buildAndExpand(savedDto.getAppointmentId()).toUri());
         return new ResponseEntity<>(savedDto, headers, HttpStatus.CREATED);
 
     }

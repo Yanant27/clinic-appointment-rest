@@ -99,56 +99,56 @@ public class DataLoader implements CommandLineRunner {
                 .date(LocalDate.of(2022, 7, 7))
                 .startTime(LocalTime.of(8,0))
                 .endTime(LocalTime.of(10, 0))
-                .status(DoctorStatus.AVAILABLE)
+                .doctorStatus(DoctorStatus.AVAILABLE)
                 .build();
 
         Schedule schedule2 = Schedule.builder()
                 .date(LocalDate.of(2022, 7, 7))
                 .startTime(LocalTime.of(10, 0))
                 .endTime(LocalTime.of(12, 0))
-                .status(DoctorStatus.AVAILABLE)
+                .doctorStatus(DoctorStatus.AVAILABLE)
                 .build();
 
         Schedule schedule3 = Schedule.builder()
                 .date(LocalDate.of(2022, 7, 7))
                 .startTime(LocalTime.of(13, 0))
                 .endTime(LocalTime.of(15, 0))
-                .status(DoctorStatus.AVAILABLE)
+                .doctorStatus(DoctorStatus.AVAILABLE)
                 .build();
 
         Schedule schedule4 = Schedule.builder()
                 .date(LocalDate.of(2022, 7, 8))
                 .startTime(LocalTime.of(15, 0))
                 .endTime(LocalTime.of(17, 30))
-                .status(DoctorStatus.AVAILABLE)
+                .doctorStatus(DoctorStatus.AVAILABLE)
                 .build();
 
         Schedule schedule5 = Schedule.builder()
                         .date(LocalDate.of(2022, 7, 8))
                         .startTime(LocalTime.of(8,0))
                         .endTime(LocalTime.of(10, 0))
-                        .status(DoctorStatus.AVAILABLE)
+                        .doctorStatus(DoctorStatus.AVAILABLE)
                         .build();
 
         Schedule schedule6 = Schedule.builder()
                         .date(LocalDate.of(2022, 7, 8))
                         .startTime(LocalTime.of(10, 0))
                         .endTime(LocalTime.of(12, 0))
-                        .status(DoctorStatus.AVAILABLE)
+                        .doctorStatus(DoctorStatus.AVAILABLE)
                         .build();
 
         Schedule schedule7 = Schedule.builder()
                 .date(LocalDate.of(2022, 7, 8))
                 .startTime(LocalTime.of(13, 0))
                 .endTime(LocalTime.of(15, 0))
-                .status(DoctorStatus.AVAILABLE)
+                .doctorStatus(DoctorStatus.AVAILABLE)
                 .build();
 
         Schedule schedule8 = Schedule.builder()
                         .date(LocalDate.of(2022, 7, 8))
                         .startTime(LocalTime.of(15, 0))
                         .endTime(LocalTime.of(17, 30))
-                        .status(DoctorStatus.AVAILABLE)
+                        .doctorStatus(DoctorStatus.AVAILABLE)
                         .build();
 
         doctor1.addSchedule(schedule1);

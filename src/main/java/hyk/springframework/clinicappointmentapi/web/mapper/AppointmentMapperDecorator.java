@@ -53,7 +53,8 @@ public abstract class AppointmentMapperDecorator implements AppointmentMapper {
     public AppointmentDTO appointmentToAppointmentDto(Appointment appointment) {
         AppointmentDTO appointmentDTO = appointmentMapper.appointmentToAppointmentDto(appointment);
         appointmentDTO.setAppointmentId(appointment.getId());
-        appointmentDTO.setAppointmentStatus(appointment.getAppointmentStatus().name());
+//        appointmentDTO.setAppointmentStatus(appointment.getAppointmentStatus().name());
+        appointmentDTO.setAppointmentStatus(appointment.getAppointmentStatus());
         appointmentDTO.setAppointmentDate(appointment.getSchedule().getDate());
         appointmentDTO.setScheduleId(appointment.getSchedule().getId());
         appointmentDTO.setStartTime(appointment.getSchedule().getStartTime());
@@ -89,7 +90,8 @@ public abstract class AppointmentMapperDecorator implements AppointmentMapper {
             appointment.setSchedule(scheduleRepository.findById(appointmentDTO.getScheduleId()).orElseThrow(NotFoundException::new));
         }
         appointment.setAppointmentDate(appointmentDTO.getAppointmentDate());
-        appointment.setAppointmentStatus(AppointmentStatus.valueOf(appointmentDTO.getAppointmentStatus()));
+//        appointment.setAppointmentStatus(AppointmentStatus.valueOf(appointmentDTO.getAppointmentStatus()));
+        appointment.setAppointmentStatus(appointmentDTO.getAppointmentStatus());
         return appointment;
     }
 }
