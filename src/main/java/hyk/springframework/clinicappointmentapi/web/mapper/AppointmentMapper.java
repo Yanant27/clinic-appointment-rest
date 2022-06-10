@@ -14,7 +14,7 @@ import org.mapstruct.factory.Mappers;
 public interface AppointmentMapper {
     AppointmentMapper INSTANCE = Mappers.getMapper(AppointmentMapper.class);
 
-AppointmentDTO appointmentToAppointmentDto(Appointment appointment);
+    AppointmentDTO appointmentToAppointmentDto(Appointment appointment);
 
-Appointment appointmentDtoToAppointment(AppointmentDTO appointmentDTO);
+    Appointment appointmentDtoToAppointment(AppointmentDTO appointmentDTO);
 }

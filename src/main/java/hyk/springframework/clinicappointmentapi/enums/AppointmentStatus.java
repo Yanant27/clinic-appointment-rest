@@ -6,5 +6,5 @@ package hyk.springframework.clinicappointmentapi.enums;
 public enum AppointmentStatus {
     BOOKED,
     CANCELLED,
-    COMPLETED;
+    COMPLETED
 }

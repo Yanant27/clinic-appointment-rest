@@ -30,9 +30,6 @@ public class AppointmentDTO {
     @JsonProperty("appointmentDate")
     private LocalDate appointmentDate;
 
-//    private DoctorDTO doctor;
-//    private PatientDTO patient;
-//    private ScheduleDTO schedule;
     private String appointmentStatus;
     private Long scheduleId;
 
@@ -42,11 +39,6 @@ public class AppointmentDTO {
     @JsonProperty("endTime")
     private LocalTime endTime;
 
-//    private Long doctorId;
-//    private String doctorName;
-//    private String specialization;
-//    private Long patientId;
-//    private String patientName;
     private DoctorDTO doctorDTO;
     private PatientDTO patientDTO;
 }

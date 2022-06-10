@@ -1,8 +1,7 @@
 package hyk.springframework.clinicappointmentapi.web.controller.api.v1;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import hyk.springframework.clinicappointmentapi.service.AppointmentService;
+import hyk.springframework.clinicappointmentapi.util.JsonStringUtil;
 import hyk.springframework.clinicappointmentapi.web.dto.AppointmentDTO;
 import hyk.springframework.clinicappointmentapi.web.dto.DoctorDTO;
 import hyk.springframework.clinicappointmentapi.web.dto.PatientDTO;
@@ -71,8 +70,7 @@ public class AppointmentControllerTest {
                 .doctorDTO(DoctorDTO.builder().id(11L).name("Dr. Nay Oo").address("Yangon").phoneNumber("09123456789").specialization("Internal Medicine").build())
                 .patientDTO(PatientDTO.builder().id(21L).name("Min Min").address("Yangon").phoneNumber("09987654321").build()).build());
         
-        mockMvc = MockMvcBuilders.standaloneSetup(appointmentController)
-                .build();
+        mockMvc = MockMvcBuilders.standaloneSetup(appointmentController).build();
     }
 
     @DisplayName("Display All Appointments")
@@ -97,10 +95,10 @@ public class AppointmentControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.appointmentStatus", equalTo("BOOKED")))
-                .andExpect(jsonPath("$.doctorDTO.name", equalTo("Dr. Lin Htet")))
-                .andExpect(jsonPath("$.patientDTO.name", equalTo("Hsu Hsu")))
-                .andExpect(jsonPath("$.appointmentDate", equalTo("2022-07-07")));
+                .andExpect(jsonPath("$.appointmentStatus", equalTo(appointmentDTO.getAppointmentStatus())))
+                .andExpect(jsonPath("$.doctorDTO.name", equalTo(appointmentDTO.getDoctorDTO().getName())))
+                .andExpect(jsonPath("$.patientDTO.name", equalTo(appointmentDTO.getPatientDTO().getName())))
+                .andExpect(jsonPath("$.appointmentDate", equalTo(appointmentDTO.getAppointmentDate().toString())));
     }
 
     @DisplayName("Create Appointment")
@@ -110,7 +108,7 @@ public class AppointmentControllerTest {
         when(appointmentService.saveAppointment(appointmentDTO)).thenReturn(appointmentDTO);
 
         mockMvc.perform(post(BASE_URL)
-                    .content(asJsonString(appointmentDTO))
+                    .content(JsonStringUtil.asJsonString(appointmentDTO))
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
@@ -133,8 +131,8 @@ public class AppointmentControllerTest {
         when(appointmentService.saveAppointment(appointmentDTO)).thenReturn(savedDto);
 
         // when -  action or the behaviour that we are going test
-        mockMvc.perform(patch(BASE_URL + "/" + appointmentDTO.getAppointmentId())
-                    .content(asJsonString(appointmentDTO))
+        mockMvc.perform(patch(BASE_URL + "/" + savedDto.getAppointmentId())
+                    .content(JsonStringUtil.asJsonString(appointmentDTO))
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON))
                 // then - verify the output
@@ -150,16 +148,6 @@ public class AppointmentControllerTest {
                     .accept(MediaType.APPLICATION_JSON))
                .andExpect(status().is2xxSuccessful());
 
-        verify(appointmentService).deleteAppointmentById(1L);
-    }
-
-    public static String asJsonString(final Object obj) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.registerModule(new JavaTimeModule());
-            return mapper.writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        verify(appointmentService).deleteAppointmentById(anyLong());
     }
 }

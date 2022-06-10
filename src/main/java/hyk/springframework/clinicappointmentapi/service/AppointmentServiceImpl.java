@@ -49,6 +49,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
+    @Transactional
     public void deleteAppointmentById(Long appointmentId) {
         appointmentRepository.findById(appointmentId).ifPresentOrElse(appointment -> {
             appointmentRepository.deleteById(appointmentId);

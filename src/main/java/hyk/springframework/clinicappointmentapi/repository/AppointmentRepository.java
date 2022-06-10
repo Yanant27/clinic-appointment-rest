@@ -12,9 +12,4 @@ import java.util.Optional;
  * @author Htoo Yanant Khin
  **/
 public interface AppointmentRepository extends JpaRepository<Appointment, Long>, JpaSpecificationExecutor<Appointment> {
-    List<Appointment> findAllByDoctorName(String doctorName);
-
-    List<Appointment> findAllByPatientName(String patientName);
-
-    List<Appointment> findAllByAppointmentDate(LocalDate appointmentDate);
 }

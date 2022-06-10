@@ -25,7 +25,7 @@ public class Patient extends PersonEntity {
     @JsonIgnore
     private List<Appointment> appointments;
 
-    public Patient addAppointMent(Appointment appointment) {
+    public Patient addAppointment(Appointment appointment) {
         appointment.setPatient(this);
         this.appointments.add(appointment);
         return this;
