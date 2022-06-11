@@ -1,6 +1,8 @@
 package hyk.springframework.clinicappointmentapi.service;
 
+import hyk.springframework.clinicappointmentapi.domain.Doctor;
 import hyk.springframework.clinicappointmentapi.domain.Schedule;
+import hyk.springframework.clinicappointmentapi.repository.DoctorRepository;
 import hyk.springframework.clinicappointmentapi.repository.ScheduleRepository;
 import hyk.springframework.clinicappointmentapi.web.dto.ScheduleDTO;
 import hyk.springframework.clinicappointmentapi.web.mapper.ScheduleMapper;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
+    private final DoctorRepository doctorRepository;
     private final ScheduleMapper scheduleMapper;
 
     @Override
@@ -56,10 +59,13 @@ public class ScheduleServiceImpl implements ScheduleService {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Schedule Not Found. ID: " + scheduleId);
         });
+        Doctor doctor = doctorRepository.findById(scheduleDTO.getDoctorId()).orElseThrow(RuntimeException::new);
+        doctor.setName(scheduleDTO.getDoctorName());
+
         schedule.setDate(scheduleDTO.getDate());
         schedule.setStartTime(scheduleDTO.getStartTime());
         schedule.setEndTime(scheduleDTO.getEndTime());
-        schedule.setDoctor(scheduleDTO.getDoctor());
+        schedule.setDoctor(doctor);
         schedule.setDoctorStatus(scheduleDTO.getDoctorStatus());
         return scheduleMapper.scheduleToScheduleDto(scheduleRepository.save(schedule));
     }

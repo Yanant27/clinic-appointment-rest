@@ -60,6 +60,7 @@ class PatientControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)));
+
     }
 
     @DisplayName("Display Patient By ID")

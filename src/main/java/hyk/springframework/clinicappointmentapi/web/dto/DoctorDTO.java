@@ -27,6 +27,4 @@ public class DoctorDTO {
     private String phoneNumber;
     private String degree;
     private String specialization;
-//    private List<ScheduleDTO> schedules;
-//    private List<AppointmentDTO> appointments;
 }

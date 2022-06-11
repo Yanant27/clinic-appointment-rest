@@ -4,8 +4,6 @@ import hyk.springframework.clinicappointmentapi.enums.AppointmentStatus;
 import hyk.springframework.clinicappointmentapi.service.AppointmentService;
 import hyk.springframework.clinicappointmentapi.util.JsonStringUtil;
 import hyk.springframework.clinicappointmentapi.web.dto.AppointmentDTO;
-import hyk.springframework.clinicappointmentapi.web.dto.DoctorDTO;
-import hyk.springframework.clinicappointmentapi.web.dto.PatientDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -54,12 +52,14 @@ public class AppointmentControllerTest {
         appointmentDTOs.add(AppointmentDTO.builder()
                 .appointmentId(1L)
                 .appointmentDate(LocalDate.of(2022,7,7))
-                        .appointmentStatus(AppointmentStatus.BOOKED)
+                .appointmentStatus(AppointmentStatus.BOOKED)
                 .scheduleId(3L)
                 .startTime(LocalTime.of(10,0))
                 .endTime(LocalTime.of(12,0))
-                .doctorDTO(DoctorDTO.builder().id(10L).name("Dr. Lin Htet").address("Mudon").phoneNumber("09123456789").specialization("Internal Medicine").build())
-                .patientDTO(PatientDTO.builder().id(21L).name("Hsu Hsu").address("Yangon").phoneNumber("09987654321").build()).build());
+                .doctorId(10L)
+                .doctorName("Dr. Lin Htet")
+                .patientId(21L)
+                .patientName("Hsu Hsu").build());
         appointmentDTOs.add(AppointmentDTO.builder()
                 .appointmentId(2L)
                 .appointmentDate(LocalDate.of(2022,7,8))
@@ -67,13 +67,15 @@ public class AppointmentControllerTest {
                 .scheduleId(3L)
                 .startTime(LocalTime.of(12,0))
                 .endTime(LocalTime.of(13,0))
-                .doctorDTO(DoctorDTO.builder().id(10L).name("Dr. Lin Htet").address("Mudon").phoneNumber("09123456789").specialization("Internal Medicine").build())
-                .patientDTO(PatientDTO.builder().id(21L).name("Hsu Hsu").address("Yangon").phoneNumber("09987654321").build()).build());
+                .doctorId(10L)
+                .doctorName("Dr. Lin Htet")
+                .patientId(21L)
+                .patientName("Hsu Hsu").build());
         
         mockMvc = MockMvcBuilders.standaloneSetup(appointmentController).build();
     }
 
-    @DisplayName("Display All Appointments - without request parameter")
+    @DisplayName("Display All Appointments - without Request Parameter")
     @Test
     public void showAllAppointments_success_without_param() throws Exception {
         when(appointmentService.findAllAppointments(null, null, null)).thenReturn(appointmentDTOs);
@@ -135,8 +137,8 @@ public class AppointmentControllerTest {
                     .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.appointmentStatus", equalTo(appointmentDTO.getAppointmentStatus().toString())))
-                .andExpect(jsonPath("$.doctorDTO.name", equalTo(appointmentDTO.getDoctorDTO().getName())))
-                .andExpect(jsonPath("$.patientDTO.name", equalTo(appointmentDTO.getPatientDTO().getName())))
+                .andExpect(jsonPath("$.doctorName", equalTo(appointmentDTO.getDoctorName())))
+                .andExpect(jsonPath("$.patientName", equalTo(appointmentDTO.getPatientName())))
                 .andExpect(jsonPath("$.appointmentDate", equalTo(appointmentDTO.getAppointmentDate().toString())));
     }
 
@@ -153,8 +155,8 @@ public class AppointmentControllerTest {
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$", notNullValue()))
                 .andExpect(jsonPath("$.appointmentStatus", equalTo("BOOKED")))
-                .andExpect(jsonPath("$.doctorDTO.name", equalTo("Dr. Lin Htet")))
-                .andExpect(jsonPath("$.patientDTO.name", equalTo("Hsu Hsu")))
+                .andExpect(jsonPath("$.doctorName", equalTo("Dr. Lin Htet")))
+                .andExpect(jsonPath("$.patientName", equalTo("Hsu Hsu")))
                 .andExpect(jsonPath("$.appointmentDate", equalTo("2022-07-07")));
     }
 
@@ -164,7 +166,6 @@ public class AppointmentControllerTest {
         AppointmentDTO appointmentDTO = appointmentDTOs.get(0);
 
         AppointmentDTO savedDto = appointmentDTOs.get(0);
-//        savedDto.setAppointmentStatus("CANCELLED");
         savedDto.setAppointmentStatus(AppointmentStatus.CANCELLED);
         when(appointmentService.findAppointmentById(anyLong())).thenReturn(appointmentDTO);
         when(appointmentService.saveAppointment(appointmentDTO)).thenReturn(savedDto);

@@ -19,8 +19,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -60,6 +59,7 @@ class DoctorControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)));
+        verify(doctorService, times(1)).findAllDoctors();
     }
 
     @DisplayName("Display Doctor By ID")
@@ -77,6 +77,7 @@ class DoctorControllerTest {
                 .andExpect(jsonPath("$.phoneNumber", equalTo(doctorDTO.getPhoneNumber())))
                 .andExpect(jsonPath("$.degree", equalTo(doctorDTO.getDegree())))
                 .andExpect(jsonPath("$.specialization", equalTo(doctorDTO.getSpecialization())));
+        verify(doctorService, times(1)).findDoctorById(anyLong());
     }
 
     @DisplayName("Create Doctor")
@@ -95,6 +96,7 @@ class DoctorControllerTest {
                 .andExpect(jsonPath("$.phoneNumber", equalTo(doctorDTO.getPhoneNumber())))
                 .andExpect(jsonPath("$.degree", equalTo(doctorDTO.getDegree())))
                 .andExpect(jsonPath("$.specialization", equalTo(doctorDTO.getSpecialization())));
+        verify(doctorService, times(1)).saveNewDoctor(any());
     }
 
     @Test
@@ -114,6 +116,7 @@ class DoctorControllerTest {
                 // then - verify the output
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.phoneNumber", is(savedDto.getPhoneNumber())));
+        verify(doctorService, times(1)).updateDoctor(anyLong(), any());
     }
 
     @DisplayName("Delete Doctor")

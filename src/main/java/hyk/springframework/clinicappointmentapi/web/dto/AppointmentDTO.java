@@ -27,19 +27,19 @@ public class AppointmentDTO {
     private Long appointmentId;
 
     @JsonFormat(pattern="yyyy-MM-dd", shape=JsonFormat.Shape.STRING)
-    @JsonProperty("appointmentDate")
     private LocalDate appointmentDate;
 
-//    private String appointmentStatus;
     private AppointmentStatus appointmentStatus;
     private Long scheduleId;
 
-    @JsonProperty("startTime")
+    @JsonFormat(pattern="HH:mm", shape=JsonFormat.Shape.STRING)
     private LocalTime startTime;
 
-    @JsonProperty("endTime")
+    @JsonFormat(pattern="HH:mm", shape=JsonFormat.Shape.STRING)
     private LocalTime endTime;
 
-    private DoctorDTO doctorDTO;
-    private PatientDTO patientDTO;
+    private Long doctorId;
+    private String doctorName;
+    private Long patientId;
+    private String patientName;
 }

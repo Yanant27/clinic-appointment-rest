@@ -21,7 +21,7 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     @GetMapping
-    public ResponseEntity<List<ScheduleDTO>> showAllAppointments(
+    public ResponseEntity<List<ScheduleDTO>> showAllSchedules(
             @RequestParam(name = "doctorId", required = false) Long doctorId) {
         return new ResponseEntity<>(scheduleService.findAllSchedules(doctorId), HttpStatus.OK);
     }

@@ -1,5 +1,6 @@
 package hyk.springframework.clinicappointmentapi.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import hyk.springframework.clinicappointmentapi.domain.Appointment;
 import hyk.springframework.clinicappointmentapi.domain.Doctor;
 import hyk.springframework.clinicappointmentapi.domain.Schedule;
@@ -22,10 +23,17 @@ import java.util.List;
 @Builder
 public class ScheduleDTO {
     private Long id;
+
+    @JsonFormat(pattern="yyyy-MM-dd", shape=JsonFormat.Shape.STRING)
     private LocalDate date;
+
+    @JsonFormat(pattern="HH:mm", shape=JsonFormat.Shape.STRING)
     private LocalTime startTime;
+
+    @JsonFormat(pattern="HH:mm", shape=JsonFormat.Shape.STRING)
     private LocalTime endTime;
-    private Doctor doctor;
+
+    private Long doctorId;
+    private String doctorName;
     private DoctorStatus doctorStatus;
-//    private List<AppointmentDTO> appointments;
 }

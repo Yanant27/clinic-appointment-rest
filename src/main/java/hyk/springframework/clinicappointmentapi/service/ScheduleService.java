@@ -8,7 +8,7 @@ import java.util.List;
  * @author Htoo Yanant Khin
  **/
 public interface ScheduleService {
-    List<ScheduleDTO> findAllSchedules(Long scheduleId);
+    List<ScheduleDTO> findAllSchedules(Long doctorId);
 
     ScheduleDTO findScheduleById(Long scheduleId);
 
