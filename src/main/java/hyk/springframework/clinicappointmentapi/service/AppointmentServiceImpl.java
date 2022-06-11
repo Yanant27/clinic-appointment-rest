@@ -3,15 +3,12 @@ package hyk.springframework.clinicappointmentapi.service;
 import hyk.springframework.clinicappointmentapi.domain.Appointment;
 import hyk.springframework.clinicappointmentapi.repository.AppointmentRepository;
 import hyk.springframework.clinicappointmentapi.web.dto.AppointmentDTO;
+import hyk.springframework.clinicappointmentapi.web.exception.NotFoundException;
 import hyk.springframework.clinicappointmentapi.web.mapper.AppointmentMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -49,7 +46,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (optionalAppointmentDTO.isPresent()) {
             return appointmentMapper.appointmentToAppointmentDto(optionalAppointmentDTO.get());
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Appointment Not Found. ID: " + appointmentId);
+            throw new NotFoundException("Appointment Not Found. ID: " + appointmentId);
         }
     }
 
@@ -66,7 +63,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointmentRepository.findById(appointmentId).ifPresentOrElse(appointment -> {
             appointmentRepository.deleteById(appointmentId);
         }, () -> {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Appointment Not Found. ID: " + appointmentId);
+            throw new NotFoundException("Appointment Not Found. ID: " + appointmentId);
         });
     }
 }

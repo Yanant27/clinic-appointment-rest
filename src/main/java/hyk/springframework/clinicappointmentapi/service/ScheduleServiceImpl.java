@@ -5,6 +5,7 @@ import hyk.springframework.clinicappointmentapi.domain.Schedule;
 import hyk.springframework.clinicappointmentapi.repository.DoctorRepository;
 import hyk.springframework.clinicappointmentapi.repository.ScheduleRepository;
 import hyk.springframework.clinicappointmentapi.web.dto.ScheduleDTO;
+import hyk.springframework.clinicappointmentapi.web.exception.NotFoundException;
 import hyk.springframework.clinicappointmentapi.web.mapper.ScheduleMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         if (optionalSchedule.isPresent()) {
             return scheduleMapper.scheduleToScheduleDto(optionalSchedule.get());
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Schedule Not Found. ID: " + scheduleId);
+            throw new NotFoundException("Schedule Not Found. ID: " + scheduleId);
         }
     }
 
@@ -57,7 +58,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public ScheduleDTO updateSchedule(Long scheduleId, ScheduleDTO scheduleDTO) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Schedule Not Found. ID: " + scheduleId);
+            throw new NotFoundException("Schedule Not Found. ID: " + scheduleId);
         });
         Doctor doctor = doctorRepository.findById(scheduleDTO.getDoctorId()).orElseThrow(RuntimeException::new);
         doctor.setName(scheduleDTO.getDoctorName());
@@ -75,7 +76,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         scheduleRepository.findById(scheduleId).ifPresentOrElse(appointment -> {
             scheduleRepository.deleteById(scheduleId);
         }, () -> {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Schedule Not Found. ID: " + scheduleId);
+            throw new NotFoundException("Schedule Not Found. ID: " + scheduleId);
         });
     }
 }

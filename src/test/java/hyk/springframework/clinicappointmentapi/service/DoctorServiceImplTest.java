@@ -3,6 +3,7 @@ package hyk.springframework.clinicappointmentapi.service;
 import hyk.springframework.clinicappointmentapi.domain.Doctor;
 import hyk.springframework.clinicappointmentapi.repository.DoctorRepository;
 import hyk.springframework.clinicappointmentapi.web.dto.DoctorDTO;
+import hyk.springframework.clinicappointmentapi.web.exception.NotFoundException;
 import hyk.springframework.clinicappointmentapi.web.mapper.DoctorMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -75,10 +76,10 @@ class DoctorServiceImplTest {
     @Test
     public void findDoctorById_not_found() {
         when(doctorRepository.findById(anyLong())).thenReturn(Optional.empty());
-        Exception exception = assertThrows(ResponseStatusException.class,
+        Exception exception = assertThrows(NotFoundException.class,
                 () -> doctorService.findDoctorById(anyLong()));
         verify(doctorRepository, times(1)).findById(anyLong());
-        assertEquals("404 NOT_FOUND \"Doctor Not Found. ID: 0\"", exception.getMessage());
+        assertEquals("Doctor Not Found. ID: 0", exception.getMessage());
     }
 
     @DisplayName("Save New Doctor")
@@ -129,10 +130,10 @@ class DoctorServiceImplTest {
 
         when(doctorRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(ResponseStatusException.class,
+        Exception exception = assertThrows(NotFoundException.class,
                 () -> doctorService.updateDoctor(anyLong(), doctorDTO));
         verify(doctorRepository, times(1)).findById(anyLong());
-        assertEquals("404 NOT_FOUND \"Doctor Not Found. ID: 0\"", exception.getMessage());
+        assertEquals("Doctor Not Found. ID: 0", exception.getMessage());
     }
 
     @DisplayName("Delete Appointment - Success")
@@ -151,9 +152,9 @@ class DoctorServiceImplTest {
     public void deleteDoctorById_not_found() {
         when(doctorRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(ResponseStatusException.class,
+        Exception exception = assertThrows(NotFoundException.class,
                 () -> doctorService.deleteDoctorById(anyLong()));
         verify(doctorRepository, times(0)).deleteById(anyLong());
-        assertEquals("404 NOT_FOUND \"Doctor Not Found. ID: 0\"", exception.getMessage());
+        assertEquals("Doctor Not Found. ID: 0", exception.getMessage());
     }
 }

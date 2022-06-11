@@ -3,6 +3,7 @@ package hyk.springframework.clinicappointmentapi.service;
 import hyk.springframework.clinicappointmentapi.domain.Patient;
 import hyk.springframework.clinicappointmentapi.repository.PatientRepository;
 import hyk.springframework.clinicappointmentapi.web.dto.PatientDTO;
+import hyk.springframework.clinicappointmentapi.web.exception.NotFoundException;
 import hyk.springframework.clinicappointmentapi.web.mapper.PatientMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,7 +36,7 @@ public class PatientServiceImpl implements PatientService {
         if (optionalPatient.isPresent()) {
             return patientMapper.patientToPatientDto(optionalPatient.get());
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Patient Not Found. ID: " + patientId);
+            throw new NotFoundException("Patient Not Found. ID: " + patientId);
         }
     }
 
@@ -48,7 +49,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public PatientDTO updatePatient(Long patientId, PatientDTO patientDTO) {
         Patient patient = patientRepository.findById(patientId).orElseThrow(() -> {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Patient Not Found. ID: " + patientId);
+            throw new NotFoundException("Patient Not Found. ID: " + patientId);
         });
         patient.setName(patientDTO.getName());
         patient.setAddress(patientDTO.getAddress());
@@ -62,7 +63,7 @@ public class PatientServiceImpl implements PatientService {
         patientRepository.findById(patientId).ifPresentOrElse(appointment -> {
             patientRepository.deleteById(patientId);
         }, () -> {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Patient Not Found. ID: " + patientId);
+            throw new NotFoundException("Patient Not Found. ID: " + patientId);
         });
     }
 }

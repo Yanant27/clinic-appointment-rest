@@ -7,6 +7,7 @@ import hyk.springframework.clinicappointmentapi.domain.Schedule;
 import hyk.springframework.clinicappointmentapi.enums.AppointmentStatus;
 import hyk.springframework.clinicappointmentapi.repository.AppointmentRepository;
 import hyk.springframework.clinicappointmentapi.web.dto.AppointmentDTO;
+import hyk.springframework.clinicappointmentapi.web.exception.NotFoundException;
 import hyk.springframework.clinicappointmentapi.web.mapper.AppointmentMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -129,10 +130,10 @@ class AppointmentServiceImplTest {
     @Test
     public void findAppointmentById_not_found() {
         when(appointmentRepository.findById(anyLong())).thenReturn(Optional.empty());
-        Exception exception = assertThrows(ResponseStatusException.class,
+        Exception exception = assertThrows(NotFoundException.class,
                 () -> appointmentService.findAppointmentById(anyLong()));
         verify(appointmentRepository, times(1)).findById(anyLong());
-        assertEquals("404 NOT_FOUND \"Appointment Not Found. ID: 0\"", exception.getMessage());
+        assertEquals("Appointment Not Found. ID: 0", exception.getMessage());
     }
 
     @DisplayName("Save Appointment")
@@ -165,9 +166,9 @@ class AppointmentServiceImplTest {
     @Test
     public void deleteAppointmentById_not_found() {
         when(appointmentRepository.findById(anyLong())).thenReturn(Optional.empty());
-        Exception exception = assertThrows(ResponseStatusException.class,
+        Exception exception = assertThrows(NotFoundException.class,
                 () -> appointmentService.deleteAppointmentById(anyLong()));
         verify(appointmentRepository, times(0)).deleteById(anyLong());
-        assertEquals("404 NOT_FOUND \"Appointment Not Found. ID: 0\"", exception.getMessage());
+        assertEquals("Appointment Not Found. ID: 0", exception.getMessage());
     }
 }

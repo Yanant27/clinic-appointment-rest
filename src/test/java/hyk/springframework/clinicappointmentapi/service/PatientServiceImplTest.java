@@ -3,6 +3,7 @@ package hyk.springframework.clinicappointmentapi.service;
 import hyk.springframework.clinicappointmentapi.domain.Patient;
 import hyk.springframework.clinicappointmentapi.repository.PatientRepository;
 import hyk.springframework.clinicappointmentapi.web.dto.PatientDTO;
+import hyk.springframework.clinicappointmentapi.web.exception.NotFoundException;
 import hyk.springframework.clinicappointmentapi.web.mapper.PatientMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,10 +75,10 @@ class PatientServiceImplTest {
     @Test
     public void findPatientById_not_found() {
         when(patientRepository.findById(anyLong())).thenReturn(Optional.empty());
-        Exception exception = assertThrows(ResponseStatusException.class,
+        Exception exception = assertThrows(NotFoundException.class,
                 () -> patientService.findPatientById(anyLong()));
         verify(patientRepository, times(1)).findById(anyLong());
-        assertEquals("404 NOT_FOUND \"Patient Not Found. ID: 0\"", exception.getMessage());
+        assertEquals("Patient Not Found. ID: 0", exception.getMessage());
     }
 
     @DisplayName("Save New Patient")
@@ -125,10 +125,10 @@ class PatientServiceImplTest {
 
         when(patientRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(ResponseStatusException.class,
+        Exception exception = assertThrows(NotFoundException.class,
                 () -> patientService.updatePatient(anyLong(), PatientDTO));
         verify(patientRepository, times(1)).findById(anyLong());
-        assertEquals("404 NOT_FOUND \"Patient Not Found. ID: 0\"", exception.getMessage());
+        assertEquals("Patient Not Found. ID: 0", exception.getMessage());
     }
 
     @DisplayName("Delete Appointment - Success")
@@ -147,9 +147,9 @@ class PatientServiceImplTest {
     public void deletePatientById_not_found() {
         when(patientRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(ResponseStatusException.class,
+        Exception exception = assertThrows(NotFoundException.class,
                 () -> patientService.deletePatientById(anyLong()));
         verify(patientRepository, times(0)).deleteById(anyLong());
-        assertEquals("404 NOT_FOUND \"Patient Not Found. ID: 0\"", exception.getMessage());
+        assertEquals("Patient Not Found. ID: 0", exception.getMessage());
     }
 }

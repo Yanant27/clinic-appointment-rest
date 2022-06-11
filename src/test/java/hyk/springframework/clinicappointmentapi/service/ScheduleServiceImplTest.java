@@ -5,6 +5,7 @@ import hyk.springframework.clinicappointmentapi.domain.Schedule;
 import hyk.springframework.clinicappointmentapi.repository.DoctorRepository;
 import hyk.springframework.clinicappointmentapi.repository.ScheduleRepository;
 import hyk.springframework.clinicappointmentapi.web.dto.ScheduleDTO;
+import hyk.springframework.clinicappointmentapi.web.exception.NotFoundException;
 import hyk.springframework.clinicappointmentapi.web.mapper.ScheduleMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -101,10 +102,10 @@ class ScheduleServiceImplTest {
     @Test
     public void findScheduleById_not_found() {
         when(scheduleRepository.findById(anyLong())).thenReturn(Optional.empty());
-        Exception exception = assertThrows(ResponseStatusException.class,
+        Exception exception = assertThrows(NotFoundException.class,
                 () -> scheduleService.findScheduleById(anyLong()));
         verify(scheduleRepository, times(1)).findById(anyLong());
-        assertEquals("404 NOT_FOUND \"Schedule Not Found. ID: 0\"", exception.getMessage());
+        assertEquals("Schedule Not Found. ID: 0", exception.getMessage());
     }
 
     @DisplayName("Save New Schedule")
@@ -152,10 +153,10 @@ class ScheduleServiceImplTest {
 
         when(scheduleRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(ResponseStatusException.class,
+        Exception exception = assertThrows(NotFoundException.class,
                 () -> scheduleService.updateSchedule(anyLong(), ScheduleDTO));
         verify(scheduleRepository, times(1)).findById(anyLong());
-        assertEquals("404 NOT_FOUND \"Schedule Not Found. ID: 0\"", exception.getMessage());
+        assertEquals("Schedule Not Found. ID: 0", exception.getMessage());
     }
 
     @DisplayName("Delete Appointment - Success")
@@ -174,9 +175,9 @@ class ScheduleServiceImplTest {
     public void deleteScheduleById_not_found() {
         when(scheduleRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(ResponseStatusException.class,
+        Exception exception = assertThrows(NotFoundException.class,
                 () -> scheduleService.deleteScheduleById(anyLong()));
         verify(scheduleRepository, times(0)).deleteById(anyLong());
-        assertEquals("404 NOT_FOUND \"Schedule Not Found. ID: 0\"", exception.getMessage());
+        assertEquals("Schedule Not Found. ID: 0", exception.getMessage());
     }
 }

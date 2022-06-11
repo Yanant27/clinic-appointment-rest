@@ -1,7 +1,6 @@
 package hyk.springframework.clinicappointmentapi.web.mapper;
 
 import hyk.springframework.clinicappointmentapi.domain.Schedule;
-import hyk.springframework.clinicappointmentapi.repository.AppointmentRepository;
 import hyk.springframework.clinicappointmentapi.repository.DoctorRepository;
 import hyk.springframework.clinicappointmentapi.repository.ScheduleRepository;
 import hyk.springframework.clinicappointmentapi.web.dto.ScheduleDTO;

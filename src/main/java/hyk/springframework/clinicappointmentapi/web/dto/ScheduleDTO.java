@@ -1,9 +1,6 @@
 package hyk.springframework.clinicappointmentapi.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import hyk.springframework.clinicappointmentapi.domain.Appointment;
-import hyk.springframework.clinicappointmentapi.domain.Doctor;
-import hyk.springframework.clinicappointmentapi.domain.Schedule;
 import hyk.springframework.clinicappointmentapi.enums.DoctorStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
 /**
  * @author Htoo Yanant Khin
