@@ -29,7 +29,6 @@ public class DataLoader implements CommandLineRunner {
 
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
-    private final ScheduleRepository scheduleRepository;
     private final AppointmentRepository appointmentRepository;
 
     @Override

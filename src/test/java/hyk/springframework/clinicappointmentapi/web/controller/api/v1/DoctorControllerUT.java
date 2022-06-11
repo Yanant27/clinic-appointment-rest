@@ -28,8 +28,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Htoo Yanant Khin
  **/
 @ExtendWith(MockitoExtension.class)
-class DoctorControllerTest {
-    private final String BASE_URL = "/api/v1/doctors";
+class DoctorControllerUT {
+    private final String API_ROOT = "/api/v1/doctors";
 
     @Mock
     private DoctorService doctorService;
@@ -54,7 +54,7 @@ class DoctorControllerTest {
     public void showAllAppointments() throws Exception {
         when(doctorService.findAllDoctors()).thenReturn(doctorDTOs);
 
-        mockMvc.perform(get(BASE_URL)
+        mockMvc.perform(get(API_ROOT)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -68,7 +68,7 @@ class DoctorControllerTest {
         DoctorDTO doctorDTO = doctorDTOs.get(0);
         when(doctorService.findDoctorById(anyLong())).thenReturn(doctorDTO);
 
-        mockMvc.perform(get(BASE_URL + "/" + doctorDTO.getId())
+        mockMvc.perform(get(API_ROOT + "/" + doctorDTO.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -86,7 +86,7 @@ class DoctorControllerTest {
         DoctorDTO doctorDTO = doctorDTOs.get(0);
         when(doctorService.saveNewDoctor(doctorDTO)).thenReturn(doctorDTO);
 
-        mockMvc.perform(post(BASE_URL)
+        mockMvc.perform(post(API_ROOT)
                         .content(JsonStringUtil.asJsonString(doctorDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -109,7 +109,7 @@ class DoctorControllerTest {
         when(doctorService.updateDoctor(doctorDTO.getId(), doctorDTO)).thenReturn(savedDto);
 
         // when -  action or the behaviour that we are going test
-        mockMvc.perform(put(BASE_URL + "/" + savedDto.getId())
+        mockMvc.perform(put(API_ROOT + "/" + savedDto.getId())
                         .content(JsonStringUtil.asJsonString(doctorDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -122,7 +122,7 @@ class DoctorControllerTest {
     @DisplayName("Delete Doctor")
     @Test
     public void deleteAppointment() throws Exception {
-        mockMvc.perform(delete(BASE_URL + "/1")
+        mockMvc.perform(delete(API_ROOT + "/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful());

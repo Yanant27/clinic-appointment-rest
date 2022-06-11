@@ -3,7 +3,6 @@ package hyk.springframework.clinicappointmentapi.web.controller.api.v1;
 import hyk.springframework.clinicappointmentapi.enums.DoctorStatus;
 import hyk.springframework.clinicappointmentapi.service.ScheduleService;
 import hyk.springframework.clinicappointmentapi.util.JsonStringUtil;
-import hyk.springframework.clinicappointmentapi.web.dto.DoctorDTO;
 import hyk.springframework.clinicappointmentapi.web.dto.ScheduleDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,8 +31,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Htoo Yanant Khin
  **/
 @ExtendWith(MockitoExtension.class)
-class ScheduleControllerTest {
-    private final String BASE_URL = "/api/v1/schedules";
+class ScheduleControllerUT {
+    private final String API_ROOT = "/api/v1/schedules";
 
     @Mock
     private ScheduleService scheduleService;
@@ -47,7 +46,6 @@ class ScheduleControllerTest {
 
     @BeforeEach
     public void setUp() {
-        DoctorDTO doctorDTO = DoctorDTO.builder().id(1L).name("Dr. Lin Htet").address("Mudon").phoneNumber("09123456789").specialization("Internal Medicine").build();
         scheduleDTOs = new ArrayList<>();
         scheduleDTOs.add(ScheduleDTO.builder()
                 .id(10L)
@@ -73,7 +71,7 @@ class ScheduleControllerTest {
     public void showAllAppointments_without_param() throws Exception {
         when(scheduleService.findAllSchedules(null)).thenReturn(scheduleDTOs);
 
-        mockMvc.perform(get(BASE_URL)
+        mockMvc.perform(get(API_ROOT)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -86,7 +84,7 @@ class ScheduleControllerTest {
     public void showAllAppointments_with_doctorId() throws Exception {
         when(scheduleService.findAllSchedules(1L)).thenReturn(scheduleDTOs);
 
-        mockMvc.perform(get(BASE_URL)
+        mockMvc.perform(get(API_ROOT)
                         .param("doctorId", "1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -101,7 +99,7 @@ class ScheduleControllerTest {
         ScheduleDTO scheduleDTO = scheduleDTOs.get(0);
         when(scheduleService.findScheduleById(anyLong())).thenReturn(scheduleDTO);
 
-        mockMvc.perform(get(BASE_URL + "/" + scheduleDTO.getId())
+        mockMvc.perform(get(API_ROOT + "/" + scheduleDTO.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -118,7 +116,7 @@ class ScheduleControllerTest {
         ScheduleDTO scheduleDTO = scheduleDTOs.get(0);
         when(scheduleService.saveNewSchedule(scheduleDTO)).thenReturn(scheduleDTO);
 
-        mockMvc.perform(post(BASE_URL)
+        mockMvc.perform(post(API_ROOT)
                         .content(JsonStringUtil.asJsonString(scheduleDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -132,6 +130,7 @@ class ScheduleControllerTest {
                 .andExpect(jsonPath("$.doctorStatus", equalTo(scheduleDTO.getDoctorStatus().toString())));
     }
 
+    @DisplayName("Update Schedule")
     @Test
     public void updateSchedule() throws Exception {
         ScheduleDTO scheduleDTO = scheduleDTOs.get(0);
@@ -142,7 +141,7 @@ class ScheduleControllerTest {
         when(scheduleService.updateSchedule(scheduleDTO.getId(), scheduleDTO)).thenReturn(savedDto);
 
         // when -  action or the behaviour that we are going test
-        mockMvc.perform(put(BASE_URL + "/" + savedDto.getId())
+        mockMvc.perform(put(API_ROOT + "/" + savedDto.getId())
                         .content(JsonStringUtil.asJsonString(scheduleDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -154,7 +153,7 @@ class ScheduleControllerTest {
     @DisplayName("Delete Schedule")
     @Test
     public void deleteAppointment() throws Exception {
-        mockMvc.perform(delete(BASE_URL + "/1")
+        mockMvc.perform(delete(API_ROOT + "/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful());

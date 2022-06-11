@@ -29,8 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Htoo Yanant Khin
  **/
 @ExtendWith(MockitoExtension.class)
-class PatientControllerTest {
-    private final String BASE_URL = "/api/v1/patients";
+class PatientControllerUT {
+    private final String API_ROOT = "/api/v1/patients";
 
     @Mock
     private PatientService patientService;
@@ -55,7 +55,7 @@ class PatientControllerTest {
     public void showAllAppointments() throws Exception {
         when(patientService.findAllPatients()).thenReturn(patientDTOs);
 
-        mockMvc.perform(get(BASE_URL)
+        mockMvc.perform(get(API_ROOT)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -69,7 +69,7 @@ class PatientControllerTest {
         PatientDTO PatientDTO = patientDTOs.get(0);
         when(patientService.findPatientById(anyLong())).thenReturn(PatientDTO);
 
-        mockMvc.perform(get(BASE_URL + "/" + PatientDTO.getId())
+        mockMvc.perform(get(API_ROOT + "/" + PatientDTO.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -84,7 +84,7 @@ class PatientControllerTest {
         PatientDTO PatientDTO = patientDTOs.get(0);
         when(patientService.saveNewPatient(PatientDTO)).thenReturn(PatientDTO);
 
-        mockMvc.perform(post(BASE_URL)
+        mockMvc.perform(post(API_ROOT)
                         .content(JsonStringUtil.asJsonString(PatientDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -104,7 +104,7 @@ class PatientControllerTest {
         when(patientService.updatePatient(PatientDTO.getId(), PatientDTO)).thenReturn(savedDto);
 
         // when -  action or the behaviour that we are going test
-        mockMvc.perform(put(BASE_URL + "/" + savedDto.getId())
+        mockMvc.perform(put(API_ROOT + "/" + savedDto.getId())
                         .content(JsonStringUtil.asJsonString(PatientDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -116,7 +116,7 @@ class PatientControllerTest {
     @DisplayName("Delete Patient")
     @Test
     public void deleteAppointment() throws Exception {
-        mockMvc.perform(delete(BASE_URL + "/1")
+        mockMvc.perform(delete(API_ROOT + "/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful());

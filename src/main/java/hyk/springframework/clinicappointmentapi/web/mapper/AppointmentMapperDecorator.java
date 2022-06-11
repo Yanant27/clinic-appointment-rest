@@ -6,8 +6,6 @@ import hyk.springframework.clinicappointmentapi.repository.DoctorRepository;
 import hyk.springframework.clinicappointmentapi.repository.PatientRepository;
 import hyk.springframework.clinicappointmentapi.repository.ScheduleRepository;
 import hyk.springframework.clinicappointmentapi.web.dto.AppointmentDTO;
-import hyk.springframework.clinicappointmentapi.web.dto.DoctorDTO;
-import hyk.springframework.clinicappointmentapi.web.dto.PatientDTO;
 import hyk.springframework.clinicappointmentapi.web.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -76,6 +74,8 @@ public abstract class AppointmentMapperDecorator implements AppointmentMapper {
             appointment.setPatient(patientRepository.findById(appointmentDTO.getPatientId()).orElseThrow(NotFoundException::new));
             appointment.setSchedule(scheduleRepository.findById(appointmentDTO.getScheduleId()).orElseThrow(NotFoundException::new));
         }
+        // Update status
+        appointment.setAppointmentStatus(appointmentDTO.getAppointmentStatus());
         return appointment;
     }
 }

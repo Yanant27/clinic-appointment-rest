@@ -34,7 +34,7 @@ import java.sql.Timestamp;
 @MappedSuperclass
 public class BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 //    @GeneratedValue(generator = "UUID")
 //    @GenericGenerator(
 //            name = "UUID",

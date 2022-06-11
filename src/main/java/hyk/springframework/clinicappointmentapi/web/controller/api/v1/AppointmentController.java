@@ -48,7 +48,8 @@ public class AppointmentController {
     public ResponseEntity<AppointmentDTO> updateAppointmentStatus(@PathVariable Long appointmentId, @RequestBody AppointmentDTO appointmentDTO) {
         AppointmentDTO savedDto = appointmentService.findAppointmentById(appointmentId);
         savedDto.setAppointmentStatus(appointmentDTO.getAppointmentStatus());
-        return new ResponseEntity<>(appointmentService.saveAppointment(savedDto), HttpStatus.OK);
+        AppointmentDTO returnDto = appointmentService.saveAppointment(savedDto);
+        return new ResponseEntity<>(returnDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/{appointmentId}")
