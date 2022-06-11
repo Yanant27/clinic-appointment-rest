@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -33,7 +34,7 @@ public class ScheduleController {
     }
 
     @PostMapping
-    public ResponseEntity<ScheduleDTO> createSchedule(@RequestBody ScheduleDTO scheduleDTO) {
+    public ResponseEntity<ScheduleDTO> createSchedule(@Valid @RequestBody ScheduleDTO scheduleDTO) {
         HttpHeaders headers = new HttpHeaders();
         ScheduleDTO savedDto = scheduleService.saveNewSchedule(scheduleDTO);
         headers.setLocation(UriComponentsBuilder.newInstance()
@@ -43,7 +44,7 @@ public class ScheduleController {
     }
 
     @PutMapping ("/{scheduleId}")
-    public ResponseEntity<ScheduleDTO> updateSchedule(@PathVariable Long scheduleId, @RequestBody ScheduleDTO scheduleDTO) {
+    public ResponseEntity<ScheduleDTO> updateSchedule(@PathVariable Long scheduleId, @Valid @RequestBody ScheduleDTO scheduleDTO) {
         return new ResponseEntity<>(scheduleService.updateSchedule(scheduleId, scheduleDTO), HttpStatus.OK);
     }
 

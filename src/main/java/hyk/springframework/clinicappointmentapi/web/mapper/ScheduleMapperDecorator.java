@@ -8,6 +8,8 @@ import hyk.springframework.clinicappointmentapi.web.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import java.time.LocalDate;
+
 /**
  * @author Htoo Yanant Khin
  **/
@@ -54,6 +56,9 @@ public abstract class ScheduleMapperDecorator implements ScheduleMapper{
             schedule = scheduleMapper.scheduleDtoToSchedule(scheduleDTO);
             schedule.setDoctor(doctorRepository.findById(scheduleDTO.getDoctorId()).orElseThrow(NotFoundException::new));
         }
+        schedule.setDate(scheduleDTO.getDate());
+        schedule.setStartTime(scheduleDTO.getStartTime());
+        schedule.setEndTime(scheduleDTO.getEndTime());
         return schedule;
     }
 }

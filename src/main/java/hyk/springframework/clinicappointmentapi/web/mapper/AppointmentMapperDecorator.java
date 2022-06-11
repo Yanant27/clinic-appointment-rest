@@ -76,8 +76,6 @@ public abstract class AppointmentMapperDecorator implements AppointmentMapper {
             appointment.setPatient(patientRepository.findById(appointmentDTO.getPatientId()).orElseThrow(NotFoundException::new));
             appointment.setSchedule(scheduleRepository.findById(appointmentDTO.getScheduleId()).orElseThrow(NotFoundException::new));
         }
-//        appointment.setAppointmentDate(appointmentDTO.getAppointmentDate());
-        appointment.setAppointmentStatus(appointmentDTO.getAppointmentStatus());
         return appointment;
     }
 }

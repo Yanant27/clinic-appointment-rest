@@ -1,9 +1,13 @@
 package hyk.springframework.clinicappointmentapi.web.dto;
 
+import hyk.springframework.clinicappointmentapi.validation.ValidPhoneNumber;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author Htoo Yanant Khin
@@ -14,7 +18,14 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PatientDTO {
     private Long id;
+
+    @NotEmpty
     private String name;
+
+    @NotEmpty
     private String address;
+
+    @NotEmpty
+    @ValidPhoneNumber
     private String phoneNumber;
 }

@@ -44,8 +44,8 @@ class DoctorControllerTest {
     @BeforeEach
     public void setUp() {
         doctorDTOs = new ArrayList<>();
-        doctorDTOs.add(DoctorDTO.builder().id(10L).name("Dr. Lin Htet").address("Mudon").phoneNumber("09123456789").specialization("Internal Medicine").build());
-        doctorDTOs.add(DoctorDTO.builder().id(11L).name("Dr. Nay Oo").address("Yangon").phoneNumber("09123456789").specialization("Internal Medicine").build());
+        doctorDTOs.add(DoctorDTO.builder().id(10L).name("Dr. Lin Htet").address("Mudon").phoneNumber("09123456789").degree("MBBS").specialization("Internal Medicine").build());
+        doctorDTOs.add(DoctorDTO.builder().id(11L).name("Dr. Nay Oo").address("Yangon").phoneNumber("09123456789").degree("MBBS").specialization("Internal Medicine").build());
         mockMvc = MockMvcBuilders.standaloneSetup(doctorController).build();
     }
 

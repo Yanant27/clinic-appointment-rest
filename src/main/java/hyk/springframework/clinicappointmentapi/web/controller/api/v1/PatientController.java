@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -32,7 +33,7 @@ public class PatientController {
     }
 
     @PostMapping
-    public ResponseEntity<PatientDTO> createPatient(@RequestBody PatientDTO patientDTO) {
+    public ResponseEntity<PatientDTO> createPatient(@Valid @RequestBody PatientDTO patientDTO) {
         HttpHeaders headers = new HttpHeaders();
         PatientDTO savedDto = patientService.saveNewPatient(patientDTO);
         headers.setLocation(UriComponentsBuilder.newInstance()
@@ -42,7 +43,7 @@ public class PatientController {
     }
 
     @PutMapping ("/{patientId}")
-    public ResponseEntity<PatientDTO> updatePatient(@PathVariable Long patientId, @RequestBody PatientDTO patientDTO) {
+    public ResponseEntity<PatientDTO> updatePatient(@PathVariable Long patientId, @Valid @RequestBody PatientDTO patientDTO) {
         return new ResponseEntity<>(patientService.updatePatient(patientId, patientDTO), HttpStatus.OK);
     }
 
