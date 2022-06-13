@@ -3,7 +3,7 @@ package hyk.springframework.clinicappointmentapi.service;
 import hyk.springframework.clinicappointmentapi.domain.Appointment;
 import hyk.springframework.clinicappointmentapi.repository.AppointmentRepository;
 import hyk.springframework.clinicappointmentapi.web.dto.AppointmentDTO;
-import hyk.springframework.clinicappointmentapi.web.exception.NotFoundException;
+import hyk.springframework.clinicappointmentapi.exception.NotFoundException;
 import hyk.springframework.clinicappointmentapi.web.mapper.AppointmentMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

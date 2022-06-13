@@ -3,7 +3,7 @@ package hyk.springframework.clinicappointmentapi.service;
 import hyk.springframework.clinicappointmentapi.domain.Patient;
 import hyk.springframework.clinicappointmentapi.repository.PatientRepository;
 import hyk.springframework.clinicappointmentapi.web.dto.PatientDTO;
-import hyk.springframework.clinicappointmentapi.web.exception.NotFoundException;
+import hyk.springframework.clinicappointmentapi.exception.NotFoundException;
 import hyk.springframework.clinicappointmentapi.web.mapper.PatientMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

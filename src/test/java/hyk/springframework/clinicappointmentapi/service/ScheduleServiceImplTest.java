@@ -5,7 +5,7 @@ import hyk.springframework.clinicappointmentapi.domain.Schedule;
 import hyk.springframework.clinicappointmentapi.repository.DoctorRepository;
 import hyk.springframework.clinicappointmentapi.repository.ScheduleRepository;
 import hyk.springframework.clinicappointmentapi.web.dto.ScheduleDTO;
-import hyk.springframework.clinicappointmentapi.web.exception.NotFoundException;
+import hyk.springframework.clinicappointmentapi.exception.NotFoundException;
 import hyk.springframework.clinicappointmentapi.web.mapper.ScheduleMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

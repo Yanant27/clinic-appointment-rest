@@ -4,11 +4,9 @@ import hyk.springframework.clinicappointmentapi.domain.Schedule;
 import hyk.springframework.clinicappointmentapi.repository.DoctorRepository;
 import hyk.springframework.clinicappointmentapi.repository.ScheduleRepository;
 import hyk.springframework.clinicappointmentapi.web.dto.ScheduleDTO;
-import hyk.springframework.clinicappointmentapi.web.exception.NotFoundException;
+import hyk.springframework.clinicappointmentapi.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-
-import java.time.LocalDate;
 
 /**
  * @author Htoo Yanant Khin

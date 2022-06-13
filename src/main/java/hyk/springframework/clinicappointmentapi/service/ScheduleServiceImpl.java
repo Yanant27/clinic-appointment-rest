@@ -5,12 +5,10 @@ import hyk.springframework.clinicappointmentapi.domain.Schedule;
 import hyk.springframework.clinicappointmentapi.repository.DoctorRepository;
 import hyk.springframework.clinicappointmentapi.repository.ScheduleRepository;
 import hyk.springframework.clinicappointmentapi.web.dto.ScheduleDTO;
-import hyk.springframework.clinicappointmentapi.web.exception.NotFoundException;
+import hyk.springframework.clinicappointmentapi.exception.NotFoundException;
 import hyk.springframework.clinicappointmentapi.web.mapper.ScheduleMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;

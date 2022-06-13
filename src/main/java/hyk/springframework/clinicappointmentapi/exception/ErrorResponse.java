@@ -1,4 +1,4 @@
-package hyk.springframework.clinicappointmentapi.web.exception;
+package hyk.springframework.clinicappointmentapi.exception;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

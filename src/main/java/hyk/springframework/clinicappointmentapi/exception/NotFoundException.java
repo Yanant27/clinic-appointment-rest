@@ -1,4 +1,4 @@
-package hyk.springframework.clinicappointmentapi.web.exception;
+package hyk.springframework.clinicappointmentapi.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

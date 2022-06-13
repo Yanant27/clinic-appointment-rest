@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -20,6 +21,7 @@ import java.util.List;
 public class AppointmentController {
     private final AppointmentService appointmentService;
 
+    @PreAuthorize("hasAnyRole('ADMIN','DOCTOR','PATIENT')")
     @GetMapping
     public ResponseEntity<List<AppointmentDTO>> showAllAppointments(
             @RequestParam(name = "doctorId", required = false) Long doctorId,
@@ -28,12 +30,14 @@ public class AppointmentController {
         return new ResponseEntity<>(appointmentService.findAllAppointments(doctorId, patientId, scheduleId), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','DOCTOR','PATIENT')")
     @GetMapping("/{appointmentId}")
     public ResponseEntity<AppointmentDTO> showAppointmentById(@PathVariable Long appointmentId) {
         AppointmentDTO returnDto = appointmentService.findAppointmentById(appointmentId);
         return new ResponseEntity<>(returnDto, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','PATIENT')")
     @PostMapping
     public ResponseEntity<AppointmentDTO> createAppointment(@RequestBody AppointmentDTO appointmentDTO) {
         HttpHeaders headers = new HttpHeaders();
@@ -41,9 +45,9 @@ public class AppointmentController {
         headers.setLocation(UriComponentsBuilder.newInstance()
                 .path("/api/v1/appointments/{appointmentId}").buildAndExpand(savedDto.getAppointmentId()).toUri());
         return new ResponseEntity<>(savedDto, headers, HttpStatus.CREATED);
-
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','DOCTOR')")
     @PatchMapping("/{appointmentId}")
     public ResponseEntity<AppointmentDTO> updateAppointmentStatus(@PathVariable Long appointmentId, @RequestBody AppointmentDTO appointmentDTO) {
         AppointmentDTO savedDto = appointmentService.findAppointmentById(appointmentId);
@@ -52,6 +56,7 @@ public class AppointmentController {
         return new ResponseEntity<>(returnDto, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping("/{appointmentId}")
     public ResponseEntity<Void> deleteAppointment(@PathVariable Long appointmentId) {
         appointmentService.deleteAppointmentById(appointmentId);

@@ -4,15 +4,19 @@ import hyk.springframework.clinicappointmentapi.domain.Appointment;
 import hyk.springframework.clinicappointmentapi.domain.Doctor;
 import hyk.springframework.clinicappointmentapi.domain.Patient;
 import hyk.springframework.clinicappointmentapi.domain.Schedule;
+import hyk.springframework.clinicappointmentapi.domain.security.Role;
+import hyk.springframework.clinicappointmentapi.domain.security.User;
 import hyk.springframework.clinicappointmentapi.enums.AppointmentStatus;
 import hyk.springframework.clinicappointmentapi.enums.DoctorStatus;
 import hyk.springframework.clinicappointmentapi.repository.AppointmentRepository;
 import hyk.springframework.clinicappointmentapi.repository.DoctorRepository;
 import hyk.springframework.clinicappointmentapi.repository.PatientRepository;
 import hyk.springframework.clinicappointmentapi.repository.ScheduleRepository;
+import hyk.springframework.clinicappointmentapi.repository.security.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -30,10 +34,19 @@ public class DataLoader implements CommandLineRunner {
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
     private final AppointmentRepository appointmentRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder encoder;
 
     @Override
     public void run(String... args) throws Exception {
+        loadSecurityData();;
         loadData();
+    }
+
+    private void loadSecurityData() {
+        userRepository.save(User.builder().username("admin").password(encoder.encode("admin")).role(Role.builder().name("ADMIN").build()).build());
+        userRepository.save(User.builder().username("doctor").password(encoder.encode("doctor")).role(Role.builder().name("DOCTOR").build()).build());
+        userRepository.save(User.builder().username("patient").password(encoder.encode("patient")).role(Role.builder().name("PATIENT").build()).build());
     }
 
     private void loadData() {
