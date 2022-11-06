@@ -49,7 +49,7 @@ class ScheduleControllerUT {
         scheduleDTOs = new ArrayList<>();
         scheduleDTOs.add(ScheduleDTO.builder()
                 .id(10L)
-                .date(LocalDate.of(2022, 7, 7))
+                .date(LocalDate.of(2022, 12, 12))
                 .startTime(LocalTime.of(10,0))
                 .endTime(LocalTime.of(21, 0))
                 .doctorId(1L)
@@ -136,7 +136,7 @@ class ScheduleControllerUT {
         ScheduleDTO scheduleDTO = scheduleDTOs.get(0);
 
         ScheduleDTO savedDto = scheduleDTOs.get(0);
-        savedDto.setDate(LocalDate.of(2022,9,9));
+        savedDto.setDate(LocalDate.of(2022,12,12));
 
         when(scheduleService.updateSchedule(scheduleDTO.getId(), scheduleDTO)).thenReturn(savedDto);
 

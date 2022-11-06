@@ -99,7 +99,7 @@ public class ScheduleControllerIT {
     @Test
     public void createSchedule_success() throws Exception {
         ScheduleDTO newDto = ScheduleDTO.builder()
-                .date(LocalDate.of(2022, 8, 8))
+                .date(LocalDate.of(2022, 12, 12))
                 .startTime(LocalTime.of(8, 0))
                 .endTime(LocalTime.of(10, 0))
                 .doctorId(1L)
@@ -118,7 +118,7 @@ public class ScheduleControllerIT {
     @Test
     public void createSchedule_denied() throws Exception {
         ScheduleDTO newDto = ScheduleDTO.builder()
-                .date(LocalDate.of(2022, 8, 8))
+                .date(LocalDate.of(2022, 12, 12))
                 .startTime(LocalTime.of(8, 0))
                 .endTime(LocalTime.of(10, 0))
                 .doctorId(1L)

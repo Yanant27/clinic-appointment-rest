@@ -69,6 +69,7 @@ class DoctorServiceImplTest {
         DoctorDTO returnDto = doctorService.findDoctorById(anyLong());
         assertNotNull(returnDto);
         verify(doctorRepository, times(1)).findById(anyLong());
+
     }
 
     @DisplayName("Display Doctor By ID - Not Found")
