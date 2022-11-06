@@ -11,11 +11,11 @@ import hyk.springframework.clinicappointmentapi.enums.DoctorStatus;
 import hyk.springframework.clinicappointmentapi.repository.AppointmentRepository;
 import hyk.springframework.clinicappointmentapi.repository.DoctorRepository;
 import hyk.springframework.clinicappointmentapi.repository.PatientRepository;
-import hyk.springframework.clinicappointmentapi.repository.ScheduleRepository;
 import hyk.springframework.clinicappointmentapi.repository.security.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +29,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Component
+@Profile("dev")
 public class DataLoader implements CommandLineRunner {
 
     private final DoctorRepository doctorRepository;
@@ -39,7 +40,7 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        loadSecurityData();;
+        loadSecurityData();
         loadData();
     }
 
@@ -108,21 +109,21 @@ public class DataLoader implements CommandLineRunner {
                 .build();
 
         Schedule schedule1 = Schedule.builder()
-                .date(LocalDate.of(2022, 7, 7))
+                .date(LocalDate.of(2022,12,12))
                 .startTime(LocalTime.of(8,0))
                 .endTime(LocalTime.of(10, 0))
                 .doctorStatus(DoctorStatus.AVAILABLE)
                 .build();
 
         Schedule schedule2 = Schedule.builder()
-                .date(LocalDate.of(2022, 7, 7))
+                .date(LocalDate.of(2022,12,12))
                 .startTime(LocalTime.of(10, 0))
                 .endTime(LocalTime.of(12, 0))
                 .doctorStatus(DoctorStatus.AVAILABLE)
                 .build();
 
         Schedule schedule3 = Schedule.builder()
-                .date(LocalDate.of(2022, 7, 7))
+                .date(LocalDate.of(2022,12,12))
                 .startTime(LocalTime.of(13, 0))
                 .endTime(LocalTime.of(15, 0))
                 .doctorStatus(DoctorStatus.AVAILABLE)
@@ -296,20 +297,5 @@ public class DataLoader implements CommandLineRunner {
                         .build());
 
         log.debug("Data loaded");
-//        System.out.println("No of doctor: " + doctorRepository.count());
-//        System.out.println("No of patient: " + patientRepository.count());
-//        System.out.println("No of Schedule: " + scheduleRepository.count());
-//        System.out.println("No of appointment: " + appointmentRepository.count());
-
-//        System.out.println("After deleting ...");
-//        doctorRepository.deleteById(doctorRepository.findAll().get(0).getId());
-//        appointmentRepository.deleteAll();
-//        scheduleRepository.deleteById(scheduleRepository.findAll().get(0).getId());
-//        patientRepository.deleteById(patientRepository.findAll().get(0).getId());
-
-//        System.out.println("No of doctor: " + doctorRepository.count());
-//        System.out.println("No of patient: " + patientRepository.count());
-//        System.out.println("No of Schedule: " + scheduleRepository.count());
-//        System.out.println("No of appointment: " + appointmentRepository.count());
     }
 }
