@@ -7,10 +7,12 @@ import hyk.springframework.clinicappointmentapi.domain.Schedule;
 import hyk.springframework.clinicappointmentapi.domain.security.Role;
 import hyk.springframework.clinicappointmentapi.domain.security.User;
 import hyk.springframework.clinicappointmentapi.enums.AppointmentStatus;
-import hyk.springframework.clinicappointmentapi.enums.DoctorStatus;
+import hyk.springframework.clinicappointmentapi.enums.Gender;
+import hyk.springframework.clinicappointmentapi.enums.ScheduleStatus;
 import hyk.springframework.clinicappointmentapi.repository.AppointmentRepository;
 import hyk.springframework.clinicappointmentapi.repository.DoctorRepository;
 import hyk.springframework.clinicappointmentapi.repository.PatientRepository;
+import hyk.springframework.clinicappointmentapi.repository.ScheduleRepository;
 import hyk.springframework.clinicappointmentapi.repository.security.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +21,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 /**
@@ -32,10 +34,16 @@ import java.util.List;
 @Profile("dev")
 public class DataLoader implements CommandLineRunner {
 
+    private final ScheduleRepository scheduleRepository;
+
     private final DoctorRepository doctorRepository;
+
     private final PatientRepository patientRepository;
+
     private final AppointmentRepository appointmentRepository;
+
     private final UserRepository userRepository;
+
     private final PasswordEncoder encoder;
 
     @Override
@@ -51,249 +59,264 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void loadData() {
-
         Doctor doctor1 = Doctor.builder()
                 .name("Dr. Lin Htet")
+                .age(32L)
+                .gender(Gender.MALE)
                 .phoneNumber("09111111111")
                 .address("No.1, 1st street, Than Lyin")
-                .degree("MBBS")
+                .qualifications("MBBS")
                 .specialization("Internal medicine")
                 .build();
-
         Doctor doctor2 = Doctor.builder()
                 .name("Dr. Nyi Htut")
+                .age(35L)
+                .gender(Gender.MALE)
                 .phoneNumber("09111111111")
                 .address("No.2, 2nd street, Hlaing Township, Yangon")
-                .degree("MBBS")
+                .qualifications("MBBS")
                 .specialization("Cardiology")
                 .build();
-
         Doctor doctor3 = Doctor.builder()
                 .name("Dr. Shine Min")
+                .age(38L)
+                .gender(Gender.MALE)
                 .phoneNumber("09111111111")
                 .address("No.3, 3rd street, Lan Ma Taw Township, Yangon")
-                .degree("MBBS")
+                .qualifications("MBBS")
                 .specialization("General Surgery")
                 .build();
-
         Doctor doctor4 = Doctor.builder()
                 .name("Dr. Min Khant")
+                .age(35L)
+                .gender(Gender.MALE)
                 .phoneNumber("09111111111")
                 .address("No.4, 4th street, Tar Mwe Township, Yangon")
-                .degree("MBBS")
+                .qualifications("MBBS")
                 .specialization("General Surgery")
                 .build();
-
         Doctor doctor5 = Doctor.builder()
                 .name("Dr. Kyaw Swar")
+                .age(40L)
+                .gender(Gender.MALE)
                 .phoneNumber("09111111111")
                 .address("No.5, 5th street, Yan Kin Township, Yangon")
-                .degree("MBBS")
+                .qualifications("MBBS")
                 .specialization("Internal medicine")
                 .build();
-
         Doctor doctor6 = Doctor.builder()
                 .name("Dr. Nay Oo")
+                .age(39L)
+                .gender(Gender.MALE)
                 .phoneNumber("09111111111")
                 .address("No.6, 6th street, San Chaung Township, Yangon")
-                .degree("MBBS")
+                .qualifications("MBBS")
                 .specialization("Cardiology")
                 .build();
-
         Doctor doctor7 = Doctor.builder()
                 .name("Dr. Aung Ko")
+                .age(41L)
+                .gender(Gender.MALE)
                 .phoneNumber("09111111111")
                 .address("No.7, 7th street, Tha Mine Township, Yangon")
-                .degree("MBBS")
+                .qualifications("MBBS")
                 .specialization("Internal medicine")
                 .build();
+        doctorRepository.saveAll(List.of(doctor1, doctor2, doctor3, doctor4, doctor5, doctor6, doctor7));
 
         Schedule schedule1 = Schedule.builder()
-                .date(LocalDate.of(2022,12,12))
-                .startTime(LocalTime.of(8,0))
-                .endTime(LocalTime.of(10, 0))
-                .doctorStatus(DoctorStatus.AVAILABLE)
+                .dayOfWeek(DayOfWeek.SUNDAY.name())
+                .timeslot("09:00 ~ 10:00")
+                .scheduleStatus(ScheduleStatus.OCCUPIED)
+                .doctor(doctor1)
                 .build();
-
         Schedule schedule2 = Schedule.builder()
-                .date(LocalDate.of(2022,12,12))
-                .startTime(LocalTime.of(10, 0))
-                .endTime(LocalTime.of(12, 0))
-                .doctorStatus(DoctorStatus.AVAILABLE)
+                .dayOfWeek(DayOfWeek.MONDAY.name())
+                .timeslot("09:00 ~ 10:00")
+                .scheduleStatus(ScheduleStatus.OCCUPIED)
+                .doctor(doctor1)
                 .build();
-
         Schedule schedule3 = Schedule.builder()
-                .date(LocalDate.of(2022,12,12))
-                .startTime(LocalTime.of(13, 0))
-                .endTime(LocalTime.of(15, 0))
-                .doctorStatus(DoctorStatus.AVAILABLE)
+                .dayOfWeek(DayOfWeek.MONDAY.name())
+                .timeslot("10:00 ~ 11:00")
+                .scheduleStatus(ScheduleStatus.OCCUPIED)
+                .doctor(doctor2)
                 .build();
-
         Schedule schedule4 = Schedule.builder()
-                .date(LocalDate.of(2022, 7, 8))
-                .startTime(LocalTime.of(15, 0))
-                .endTime(LocalTime.of(17, 30))
-                .doctorStatus(DoctorStatus.AVAILABLE)
+                .dayOfWeek(DayOfWeek.THURSDAY.name())
+                .timeslot("12:00 ~ 13:00")
+                .scheduleStatus(ScheduleStatus.OCCUPIED)
+                .doctor(doctor3)
                 .build();
-
         Schedule schedule5 = Schedule.builder()
-                        .date(LocalDate.of(2022, 7, 8))
-                        .startTime(LocalTime.of(8,0))
-                        .endTime(LocalTime.of(10, 0))
-                        .doctorStatus(DoctorStatus.AVAILABLE)
-                        .build();
-
-        Schedule schedule6 = Schedule.builder()
-                        .date(LocalDate.of(2022, 7, 8))
-                        .startTime(LocalTime.of(10, 0))
-                        .endTime(LocalTime.of(12, 0))
-                        .doctorStatus(DoctorStatus.AVAILABLE)
-                        .build();
-
-        Schedule schedule7 = Schedule.builder()
-                .date(LocalDate.of(2022, 7, 8))
-                .startTime(LocalTime.of(13, 0))
-                .endTime(LocalTime.of(15, 0))
-                .doctorStatus(DoctorStatus.AVAILABLE)
+                .dayOfWeek(DayOfWeek.WEDNESDAY.name())
+                .timeslot("13:00 ~ 14:00")
+                .scheduleStatus(ScheduleStatus.OCCUPIED)
+                .doctor(doctor4)
                 .build();
-
+        Schedule schedule6 = Schedule.builder()
+                .dayOfWeek(DayOfWeek.TUESDAY.name())
+                .timeslot("15:00 ~ 16:00")
+                .scheduleStatus(ScheduleStatus.OCCUPIED)
+                .doctor(doctor4)
+                .build();
+        Schedule schedule7 = Schedule.builder()
+                .dayOfWeek(DayOfWeek.FRIDAY.name())
+                .timeslot("17:00 ~ 18:00")
+                .scheduleStatus(ScheduleStatus.OCCUPIED)
+                .doctor(doctor5)
+                .build();
         Schedule schedule8 = Schedule.builder()
-                        .date(LocalDate.of(2022, 7, 8))
-                        .startTime(LocalTime.of(15, 0))
-                        .endTime(LocalTime.of(17, 30))
-                        .doctorStatus(DoctorStatus.AVAILABLE)
-                        .build();
-
-        doctor1.addSchedule(schedule1);
-        doctor1.addSchedule(schedule8);
-        doctor2.addSchedule(schedule2);
-        doctor3.addSchedule(schedule3);
-        doctor4.addSchedule(schedule4);
-        doctor5.addSchedule(schedule5);
-        doctor6.addSchedule(schedule6);
-        doctor7.addSchedule(schedule7);
-
-        doctorRepository.saveAll(List.of(doctor1, doctor2, doctor3, doctor4, doctor5, doctor6, doctor7));
+                .dayOfWeek(DayOfWeek.SATURDAY.name())
+                .timeslot("19:00 ~ 20:00")
+                .scheduleStatus(ScheduleStatus.OCCUPIED)
+                .doctor(doctor6)
+                .build();
+        Schedule schedule9 = Schedule.builder()
+                .dayOfWeek(DayOfWeek.SUNDAY.name())
+                .timeslot("12:00 ~ 13:00")
+                .scheduleStatus(ScheduleStatus.OCCUPIED)
+                .doctor(doctor7)
+                .build();
+        Schedule schedule10 = Schedule.builder()
+                .dayOfWeek(DayOfWeek.SUNDAY.name())
+                .timeslot("14:00 ~ 15:00")
+                .build();
+        Schedule schedule11 = Schedule.builder()
+                .dayOfWeek(DayOfWeek.SUNDAY.name())
+                .timeslot("15:00 ~ 16:00")
+                .build();
+        scheduleRepository.saveAll(List.of(schedule1, schedule2, schedule3, schedule4, schedule5, schedule6,
+                schedule7, schedule8, schedule9, schedule10, schedule11));
 
         Patient patient1 = patientRepository.save(
                 Patient.builder()
-                .name("Hsu Hsu")
-                .phoneNumber("09222222222")
-                .address("No.30, Bo Ta Htaung Township, Yangon")
-                .build());
-
+                        .name("Hsu Hsu")
+                        .age(24L)
+                        .gender(Gender.FEMALE)
+                        .phoneNumber("09222222222")
+                        .address("No.30, Bo Ta Htaung Township, Yangon")
+                        .build());
         Patient patient2 = patientRepository.save(
                 Patient.builder()
-                .name("Aung Aung")
-                .phoneNumber("09222222222")
-                .address("No.30, Bo Ta Htaung Township, Yangon")
-                .build());
-
+                        .age(28L)
+                        .gender(Gender.MALE)
+                        .name("Aung Aung")
+                        .phoneNumber("09222222222")
+                        .address("No.30, Bo Ta Htaung Township, Yangon")
+                        .build());
         Patient patient3 = patientRepository.save(
                 Patient.builder()
-                .name("Kyaw Kyaw")
-                .phoneNumber("09222222222")
-                .address("No.30, Bo Ta Htaung Township, Yangon")
-                .build());
-
+                        .age(28L)
+                        .gender(Gender.MALE)
+                        .name("Kyaw Kyaw")
+                        .phoneNumber("09222222222")
+                        .address("No.30, Bo Ta Htaung Township, Yangon")
+                        .build());
         Patient patient4 = patientRepository.save(
                 Patient.builder()
-                .name("Phyu Phyu")
-                .phoneNumber("09222222222")
-                .address("No.30, Bo Ta Htaung Township, Yangon")
-                .build());
-
+                        .name("Phyu Phyu")
+                        .age(29L)
+                        .gender(Gender.FEMALE)
+                        .phoneNumber("09222222222")
+                        .address("No.30, Bo Ta Htaung Township, Yangon")
+                        .build());
         Patient patient5 = patientRepository.save(
                 Patient.builder()
-                .name("Su su")
-                .phoneNumber("09222222222")
-                .address("No.30, Bo Ta Htaung Township, Yangon")
-                .build());
-
+                        .name("Su Su")
+                        .age(31L)
+                        .gender(Gender.FEMALE)
+                        .phoneNumber("09222222222")
+                        .address("No.30, Bo Ta Htaung Township, Yangon")
+                        .build());
         Patient patient6 = patientRepository.save(
                 Patient.builder()
-                .name("Mee Mee")
-                .phoneNumber("09222222222")
-                .address("No.30, Bo Ta Htaung Township, Yangon")
-                .build());
-
+                        .name("Mee Mee")
+                        .age(34L)
+                        .gender(Gender.FEMALE)
+                        .phoneNumber("09222222222")
+                        .address("No.30, Bo Ta Htaung Township, Yangon")
+                        .build());
         Patient patient7 = patientRepository.save(
                 Patient.builder()
-                .name("Mya Mya")
-                .phoneNumber("09222222222")
-                .address("No.30, Bo Ta Htaung Township, Yangon")
-                .build());
+                        .name("Mya Mya")
+                        .age(35L)
+                        .gender(Gender.FEMALE)
+                        .phoneNumber("09222222222")
+                        .address("No.30, Bo Ta Htaung Township, Yangon")
+                        .build());
+        patientRepository.saveAll(List.of(patient1, patient2, patient3, patient4, patient5, patient6, patient7));
 
         appointmentRepository.save(
                 Appointment.builder()
-                .appointmentDate(schedule1.getDate())
-                .appointmentStatus(AppointmentStatus.BOOKED)
-                .schedule(schedule1)
-                .doctor(doctor1)
-                .patient(patient1)
-                .build());
-
-        appointmentRepository.save(
-                Appointment.builder()
-                        .appointmentDate(schedule8.getDate())
-                        .appointmentStatus(AppointmentStatus.BOOKED)
-                        .schedule(schedule8)
                         .doctor(doctor1)
                         .patient(patient1)
+                        .schedule(schedule1)
+                        .appointmentDate(LocalDate.now().plusDays(3))
+                        .appointmentStatus(AppointmentStatus.PENDING)
                         .build());
 
         appointmentRepository.save(
                 Appointment.builder()
-                        .appointmentDate(schedule2.getDate())
-                        .appointmentStatus(AppointmentStatus.BOOKED)
+                        .doctor(doctor1)
+                        .patient(patient1)
                         .schedule(schedule2)
+                        .appointmentDate(LocalDate.now().plusDays(3))
+                        .appointmentStatus(AppointmentStatus.APPROVED)
+                        .build());
+
+        appointmentRepository.save(
+                Appointment.builder()
                         .doctor(doctor2)
                         .patient(patient2)
+                        .schedule(schedule3)
+                        .appointmentDate(LocalDate.now().plusDays(5))
+                        .appointmentStatus(AppointmentStatus.PENDING)
                         .build());
 
         appointmentRepository.save(
                 Appointment.builder()
-                        .appointmentDate(schedule3.getDate())
-                        .appointmentStatus(AppointmentStatus.BOOKED)
-                        .schedule(schedule3)
                         .doctor(doctor3)
                         .patient(patient3)
+                        .schedule(schedule4)
+                        .appointmentDate(LocalDate.now().plusDays(3))
+                        .appointmentStatus(AppointmentStatus.PENDING)
                         .build());
 
         appointmentRepository.save(
                 Appointment.builder()
-                        .appointmentDate(schedule4.getDate())
-                        .appointmentStatus(AppointmentStatus.BOOKED)
-                        .schedule(schedule4)
                         .doctor(doctor4)
                         .patient(patient4)
+                        .schedule(schedule5)
+                        .appointmentDate(LocalDate.now().plusDays(6))
+                        .appointmentStatus(AppointmentStatus.CANCELLED)
                         .build());
 
         appointmentRepository.save(
                 Appointment.builder()
-                        .appointmentDate(schedule5.getDate())
-                        .appointmentStatus(AppointmentStatus.BOOKED)
-                        .schedule(schedule5)
                         .doctor(doctor5)
                         .patient(patient5)
+                        .schedule(schedule7)
+                        .appointmentDate(LocalDate.now().plusDays(5))
+                        .appointmentStatus(AppointmentStatus.PENDING)
                         .build());
 
         appointmentRepository.save(
                 Appointment.builder()
-                        .appointmentDate(schedule6.getDate())
-                        .appointmentStatus(AppointmentStatus.BOOKED)
-                        .schedule(schedule6)
                         .doctor(doctor6)
                         .patient(patient6)
+                        .schedule(schedule8)
+                        .appointmentDate(LocalDate.now().plusDays(4))
+                        .appointmentStatus(AppointmentStatus.CANCELLED)
                         .build());
 
         appointmentRepository.save(
                 Appointment.builder()
-                        .appointmentDate(schedule7.getDate())
-                        .appointmentStatus(AppointmentStatus.BOOKED)
-                        .schedule(schedule7)
                         .doctor(doctor7)
                         .patient(patient7)
+                        .schedule(schedule9)
+                        .appointmentDate(LocalDate.now().plusDays(4))
+                        .appointmentStatus(AppointmentStatus.PENDING)
                         .build());
 
         log.debug("Data loaded");
