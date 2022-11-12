@@ -1,6 +1,8 @@
 package hyk.springframework.clinicappointmentapi.service;
 
-import hyk.springframework.clinicappointmentapi.web.dto.AppointmentDTO;
+import hyk.springframework.clinicappointmentapi.dto.appointment.AppointmentRequestDTO;
+import hyk.springframework.clinicappointmentapi.dto.appointment.AppointmentResponseDTO;
+import hyk.springframework.clinicappointmentapi.dto.appointment.AppointmentUpdateStatusDTO;
 
 import java.util.List;
 
@@ -8,11 +10,17 @@ import java.util.List;
  * @author Htoo Yanant Khin
  **/
 public interface AppointmentService {
-    List<AppointmentDTO> findAllAppointments(Long doctorId, Long patientId, Long scheduleId);
+    List<AppointmentResponseDTO> findAllAppointments();
 
-    AppointmentDTO findAppointmentById(Long appointmentId);
+    AppointmentResponseDTO findAppointmentById(Long appointmentId);
 
-    AppointmentDTO saveAppointment(AppointmentDTO appointmentDTO);
+    AppointmentResponseDTO saveAppointment(AppointmentRequestDTO appointmentRequestDTO);
+
+    AppointmentResponseDTO updateAppointmentStatus(Long appointmentId, AppointmentUpdateStatusDTO appointmentUpdateStatusDTO);
 
     void deleteAppointmentById(Long appointmentId);
+
+    List<AppointmentResponseDTO> findAllAppointmentsByDoctorId(Long doctorId);
+
+    List<AppointmentResponseDTO> findAllAppointmentsByPatientId(Long patientId);
 }

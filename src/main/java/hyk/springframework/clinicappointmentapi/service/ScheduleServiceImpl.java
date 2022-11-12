@@ -2,16 +2,18 @@ package hyk.springframework.clinicappointmentapi.service;
 
 import hyk.springframework.clinicappointmentapi.domain.Doctor;
 import hyk.springframework.clinicappointmentapi.domain.Schedule;
+import hyk.springframework.clinicappointmentapi.dto.mapper.ScheduleMapper;
+import hyk.springframework.clinicappointmentapi.dto.schedule.ScheduleRequestDTO;
+import hyk.springframework.clinicappointmentapi.dto.schedule.ScheduleResponseDTO;
+import hyk.springframework.clinicappointmentapi.enums.ScheduleStatus;
+import hyk.springframework.clinicappointmentapi.exception.NotFoundException;
+import hyk.springframework.clinicappointmentapi.repository.AppointmentRepository;
 import hyk.springframework.clinicappointmentapi.repository.DoctorRepository;
 import hyk.springframework.clinicappointmentapi.repository.ScheduleRepository;
-import hyk.springframework.clinicappointmentapi.web.dto.ScheduleDTO;
-import hyk.springframework.clinicappointmentapi.exception.NotFoundException;
-import hyk.springframework.clinicappointmentapi.web.mapper.ScheduleMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -21,60 +23,82 @@ import java.util.stream.Collectors;
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
+
+    private final AppointmentRepository appointmentRepository;
+
     private final DoctorRepository doctorRepository;
     private final ScheduleMapper scheduleMapper;
 
     @Override
-    public List<ScheduleDTO> findAllSchedules(Long doctorId) {
-        List<Schedule> schedules;
-        if (doctorId != null) {
-            schedules = scheduleRepository.findAllByDoctorId(doctorId);
-        } else {
-            schedules = scheduleRepository.findAll();
-        }
-        return schedules.stream()
-                .map(scheduleMapper::scheduleToScheduleDto)
+    public List<ScheduleResponseDTO> findAllSchedules() {
+        return scheduleRepository.findAll().stream()
+                .map(scheduleMapper::scheduleToScheduleResponseDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public ScheduleDTO findScheduleById(Long scheduleId) {
-        Optional<Schedule> optionalSchedule = scheduleRepository.findById(scheduleId);
-        if (optionalSchedule.isPresent()) {
-            return scheduleMapper.scheduleToScheduleDto(optionalSchedule.get());
-        } else {
-            throw new NotFoundException("Schedule Not Found. ID: " + scheduleId);
-        }
+    public ScheduleResponseDTO findScheduleById(Long scheduleId) {
+        return scheduleRepository.findById(scheduleId)
+                .map(scheduleMapper::scheduleToScheduleResponseDto)
+                .orElseThrow(() -> {
+                    throw new NotFoundException("Schedule Not Found. ID: " + scheduleId);
+                });
     }
 
     @Override
-    public ScheduleDTO saveNewSchedule(ScheduleDTO scheduleDTO) {
-        return scheduleMapper.scheduleToScheduleDto(
-                scheduleRepository.save(scheduleMapper.scheduleDtoToSchedule(scheduleDTO)));
+    public ScheduleResponseDTO saveNewSchedule(ScheduleRequestDTO scheduleRequestDTO) {
+        // Set default schedule status for new schedule
+        scheduleRequestDTO.setScheduleStatus(ScheduleStatus.AVAILABLE);
+        return scheduleMapper.scheduleToScheduleResponseDto
+                (scheduleRepository.save(scheduleMapper.scheduleRequestDtoToSchedule(scheduleRequestDTO)));
     }
 
     @Override
-    public ScheduleDTO updateSchedule(Long scheduleId, ScheduleDTO scheduleDTO) {
-        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> {
-            throw new NotFoundException("Schedule Not Found. ID: " + scheduleId);
-        });
-        Doctor doctor = doctorRepository.findById(scheduleDTO.getDoctorId()).orElseThrow(RuntimeException::new);
-        doctor.setName(scheduleDTO.getDoctorName());
+    public ScheduleResponseDTO updateSchedule(Long scheduleId, ScheduleRequestDTO scheduleRequestDTO) {
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> {
+                    throw new NotFoundException("Schedule Not Found. ID: " + scheduleId);
+                });
+        Doctor doctor = doctorRepository.findById(scheduleRequestDTO.getDoctorId())
+                .orElseThrow(() -> {
+                    throw new NotFoundException("Doctor Not Found. ID: " + scheduleRequestDTO.getDoctorId());
+                });
 
-        schedule.setDate(scheduleDTO.getDate());
-        schedule.setStartTime(scheduleDTO.getStartTime());
-        schedule.setEndTime(scheduleDTO.getEndTime());
+        schedule.setDayOfWeek(scheduleRequestDTO.getDayOfWeek());
+        schedule.setTimeslot(scheduleRequestDTO.getTimeslot());
+        schedule.setScheduleStatus(scheduleRequestDTO.getScheduleStatus());
         schedule.setDoctor(doctor);
-        schedule.setDoctorStatus(scheduleDTO.getDoctorStatus());
-        return scheduleMapper.scheduleToScheduleDto(scheduleRepository.save(schedule));
+        return scheduleMapper.scheduleToScheduleResponseDto(scheduleRepository.save(schedule));
     }
 
     @Override
     public void deleteScheduleById(Long scheduleId) {
-        scheduleRepository.findById(scheduleId).ifPresentOrElse(appointment -> {
-            scheduleRepository.deleteById(scheduleId);
-        }, () -> {
-            throw new NotFoundException("Schedule Not Found. ID: " + scheduleId);
-        });
+        scheduleRepository.findById(scheduleId)
+                .ifPresentOrElse(appointment -> {
+                    scheduleRepository.deleteById(scheduleId);
+                }, () -> {
+                    throw new NotFoundException("Schedule Not Found. ID: " + scheduleId);
+                });
+    }
+
+    @Override
+    public List<ScheduleResponseDTO> findAllSchedulesByDoctorId(Long doctorId) {
+        return scheduleRepository.findAllByDoctorId(doctorId).stream()
+                .map(scheduleMapper::scheduleToScheduleResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void logicalDeleteScheduleByDoctorId(Long scheduleId, Long doctorId) {
+        scheduleRepository.findByIdAndDoctorId(scheduleId, doctorId)
+                .ifPresentOrElse(schedule -> {
+                    // Logically delete (set null) doctor
+                    schedule.setDoctor(null);
+                    scheduleRepository.save(schedule);
+                    // Delete all appointments booked at this schedule
+                    appointmentRepository.deleteAll(appointmentRepository.findAllByScheduleId(scheduleId));
+                }, () -> {
+                    throw new NotFoundException("Schedule Not Found. ID: " + scheduleId);
+                });
     }
 }

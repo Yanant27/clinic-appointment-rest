@@ -1,6 +1,7 @@
 package hyk.springframework.clinicappointmentapi.service;
 
-import hyk.springframework.clinicappointmentapi.web.dto.DoctorDTO;
+import hyk.springframework.clinicappointmentapi.dto.doctor.DoctorRequestDTO;
+import hyk.springframework.clinicappointmentapi.dto.doctor.DoctorResponseDTO;
 
 import java.util.List;
 
@@ -8,13 +9,15 @@ import java.util.List;
  * @author Htoo Yanant Khin
  **/
 public interface DoctorService {
-    List<DoctorDTO> findAllDoctors();
+    List<DoctorResponseDTO> findAllDoctors();
 
-    DoctorDTO findDoctorById(Long doctorId);
+    DoctorResponseDTO findDoctorById(Long doctorId);
 
-    DoctorDTO saveNewDoctor(DoctorDTO doctorDTO);
+    DoctorResponseDTO saveNewDoctor(DoctorRequestDTO doctorRequestDTO);
 
-    DoctorDTO updateDoctor(Long doctorId, DoctorDTO doctorDTO);
+    DoctorResponseDTO updateDoctor(Long doctorId, DoctorRequestDTO doctorRequestDTO);
 
     void deleteDoctorById(Long doctorId);
+
+    List<DoctorResponseDTO> findAllDoctorsBySpecialization(String specialization);
 }
