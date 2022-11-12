@@ -1,4 +1,4 @@
-package hyk.springframework.clinicappointmentapi.controller.api.v1;
+package hyk.springframework.clinicappointmentapi.controller;
 
 import hyk.springframework.clinicappointmentapi.dto.schedule.ScheduleRequestDTO;
 import hyk.springframework.clinicappointmentapi.dto.schedule.ScheduleResponseDTO;
