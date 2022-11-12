@@ -1,4 +1,4 @@
-package hyk.springframework.clinicappointmentapi.web.dto.security;
+package hyk.springframework.clinicappointmentapi.dto.security;
 
 import lombok.Getter;
 
