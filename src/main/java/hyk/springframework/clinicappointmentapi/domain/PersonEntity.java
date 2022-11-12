@@ -1,9 +1,7 @@
 package hyk.springframework.clinicappointmentapi.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import hyk.springframework.clinicappointmentapi.enums.Gender;
+import lombok.*;
 
 import javax.persistence.MappedSuperclass;
 
@@ -13,10 +11,18 @@ import javax.persistence.MappedSuperclass;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @MappedSuperclass
-public class PersonEntity extends BaseEntity {
-    private String name;
+public class PersonEntity extends NamedEntity {
+    private Long age;
+    private Gender gender;
     private String address;
     private String phoneNumber;
+
+    public PersonEntity(String name, Long age, Gender gender, String address, String phoneNumber) {
+        super(name);
+        this.age = age;
+        this.gender = gender;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+    }
 }
