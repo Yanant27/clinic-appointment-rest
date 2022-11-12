@@ -3,7 +3,7 @@ package hyk.springframework.clinicappointmentapi.enums;
 /**
  * @author Htoo Yanant Khin
  **/
-public enum DoctorStatus {
-    AVAILABLE,
-    UNAVAILABLE
+public enum Gender {
+    MALE,
+    FEMALE
 }
