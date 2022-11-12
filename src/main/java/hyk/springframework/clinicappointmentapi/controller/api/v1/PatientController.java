@@ -1,7 +1,9 @@
-package hyk.springframework.clinicappointmentapi.web.controller.api.v1;
 
+package hyk.springframework.clinicappointmentapi.controller.api.v1;
+
+import hyk.springframework.clinicappointmentapi.dto.patient.PatientRequestDTO;
+import hyk.springframework.clinicappointmentapi.dto.patient.PatientResponseDTO;
 import hyk.springframework.clinicappointmentapi.service.PatientService;
-import hyk.springframework.clinicappointmentapi.web.dto.PatientDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,22 +26,22 @@ public class PatientController {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR', 'PATIENT')")
     @GetMapping
-    public ResponseEntity<List<PatientDTO>> showAllAppointments() {
+    public ResponseEntity<List<PatientResponseDTO>> findAllPatients() {
         return new ResponseEntity<>(patientService.findAllPatients(), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR', 'PATIENT')")
     @GetMapping("/{patientId}")
-    public ResponseEntity<PatientDTO> showPatientById(@PathVariable Long patientId) {
-        PatientDTO returnDto = patientService.findPatientById(patientId);
+    public ResponseEntity<PatientResponseDTO> findPatientById(@PathVariable Long patientId) {
+        PatientResponseDTO returnDto = patientService.findPatientById(patientId);
         return new ResponseEntity<>(returnDto, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','PATIENT')")
     @PostMapping
-    public ResponseEntity<PatientDTO> createPatient(@Valid @RequestBody PatientDTO patientDTO) {
+    public ResponseEntity<PatientResponseDTO> saveNewPatient(@Valid @RequestBody PatientRequestDTO patientRequestDTO) {
         HttpHeaders headers = new HttpHeaders();
-        PatientDTO savedDto = patientService.saveNewPatient(patientDTO);
+        PatientResponseDTO savedDto = patientService.saveNewPatient(patientRequestDTO);
         headers.setLocation(UriComponentsBuilder.newInstance()
                 .path("/api/v1/patients/{patientId}").buildAndExpand(savedDto.getId()).toUri());
         return new ResponseEntity<>(savedDto, headers, HttpStatus.CREATED);
@@ -47,13 +49,13 @@ public class PatientController {
 
     @PreAuthorize("hasAnyRole('ADMIN','PATIENT')")
     @PutMapping ("/{patientId}")
-    public ResponseEntity<PatientDTO> updatePatient(@PathVariable Long patientId, @Valid @RequestBody PatientDTO patientDTO) {
-        return new ResponseEntity<>(patientService.updatePatient(patientId, patientDTO), HttpStatus.OK);
+    public ResponseEntity<PatientResponseDTO> updatePatient(@PathVariable Long patientId, @Valid @RequestBody PatientRequestDTO patientRequestDTO) {
+        return new ResponseEntity<>(patientService.updatePatient(patientId, patientRequestDTO), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping("/{patientId}")
-    public ResponseEntity<Void> deleteAppointment(@PathVariable Long patientId) {
+    public ResponseEntity<Void> deletePatientById(@PathVariable Long patientId) {
         patientService.deletePatientById(patientId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
