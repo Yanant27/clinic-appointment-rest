@@ -3,23 +3,26 @@ package hyk.springframework.clinicappointmentapi.service;
 import hyk.springframework.clinicappointmentapi.domain.Appointment;
 import hyk.springframework.clinicappointmentapi.domain.Doctor;
 import hyk.springframework.clinicappointmentapi.domain.Patient;
-import hyk.springframework.clinicappointmentapi.domain.Schedule;
+import hyk.springframework.clinicappointmentapi.dto.appointment.AppointmentRequestDTO;
+import hyk.springframework.clinicappointmentapi.dto.appointment.AppointmentResponseDTO;
+import hyk.springframework.clinicappointmentapi.dto.appointment.AppointmentUpdateStatusDTO;
+import hyk.springframework.clinicappointmentapi.dto.mapper.AppointmentMapper;
+import hyk.springframework.clinicappointmentapi.dto.mapper.PatientMapper;
+import hyk.springframework.clinicappointmentapi.dto.patient.PatientRequestDTO;
 import hyk.springframework.clinicappointmentapi.enums.AppointmentStatus;
-import hyk.springframework.clinicappointmentapi.repository.AppointmentRepository;
-import hyk.springframework.clinicappointmentapi.web.dto.AppointmentDTO;
 import hyk.springframework.clinicappointmentapi.exception.NotFoundException;
-import hyk.springframework.clinicappointmentapi.web.mapper.AppointmentMapper;
-import org.junit.jupiter.api.BeforeEach;
+import hyk.springframework.clinicappointmentapi.repository.AppointmentRepository;
+import hyk.springframework.clinicappointmentapi.repository.PatientRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,136 +38,227 @@ class AppointmentServiceImplTest {
     AppointmentRepository appointmentRepository;
 
     @Mock
-    AppointmentMapper appointmentMapper = AppointmentMapper.INSTANCE;
+    PatientRepository patientRepository;
+
+    @Mock
+    AppointmentMapper appointmentMapper;
+
+    @Mock
+    PatientMapper patientMapper;
 
     @InjectMocks
     AppointmentServiceImpl appointmentService;
 
-    List<Appointment> appointments;
-
-    @BeforeEach
-    void setUp() {
-        appointments = new ArrayList<>();
-        Doctor doctor = Doctor.builder().name("Dr. Lin Htet").address("Mudon").phoneNumber("09123456789").specialization("Internal Medicine").build();
-        doctor.setId(1L);
-        Patient patient = Patient.builder().name("Hsu Hsu").address("Yangon").phoneNumber("09987654321").build();
-        patient.setId(2L);
-        Schedule schedule = Schedule.builder().build();
-        schedule.setId(3L);
-        appointments.add(Appointment.builder()
-                .appointmentDate(LocalDate.of(2022,7,7))
-                .appointmentStatus(AppointmentStatus.BOOKED)
-                .schedule(schedule)
-                .doctor(doctor)
-                .patient(patient).build());
-        appointments.add(Appointment.builder()
-                .appointmentDate(LocalDate.of(2022,7,8))
-                .appointmentStatus(AppointmentStatus.BOOKED)
-                .schedule(schedule)
-                .doctor(doctor)
-                .patient(patient).build());
-
-        MockitoAnnotations.openMocks(this);
-        appointmentService =new AppointmentServiceImpl(appointmentRepository, appointmentMapper);
-    }
-
-    @DisplayName("Display All Appointments - Without Param")
     @Test
-    public void findAllAppointments_success() {
+    @DisplayName("Find all appointments - Success")
+    void findAllAppointments_Success() {
+        // Test data
+        List<Appointment> appointments = Arrays.asList(
+                Appointment.builder().build(),
+                Appointment.builder().build());
+
+        // Mock method call
         when(appointmentRepository.findAll()).thenReturn(appointments);
 
-        List<AppointmentDTO> result = appointmentService.findAllAppointments(null, null, null);
+        List<AppointmentResponseDTO> result = appointmentService.findAllAppointments();
+
+        // Verify
         assertEquals(2, result.size());
         verify(appointmentRepository, times(1)).findAll();
+        verify(appointmentMapper, times(result.size())).appointmentToAppointmentResponseDto(any());
     }
 
-    @DisplayName("Display All Appointments - With Param - doctorId")
     @Test
-    public void findAllAppointments_success_with_doctorId() {
-        when(appointmentRepository.findAllByDoctorId(1L)).thenReturn(appointments);
+    @DisplayName("Find appointment by id - Success")
+    void findAppointmentById_Success() {
+        // Test data
+        Appointment appointment = Appointment.builder().appointmentDate(LocalDate.now().plusDays(3)).build();
+        AppointmentResponseDTO appointmentResponseDTO = AppointmentResponseDTO.builder().appointmentDate(LocalDate.now().plusDays(3)).build();
 
-        List<AppointmentDTO> result = appointmentService.findAllAppointments(1L, null, null);
-        assertEquals(2, result.size());
-        verify(appointmentRepository, times(1)).findAllByDoctorId(anyLong());
-    }
-
-    @DisplayName("Display All Appointments - With Param - patientId")
-    @Test
-    public void findAllAppointments_success_with_patientId() {
-        when(appointmentRepository.findAllByPatientId(2L)).thenReturn(appointments);
-
-        List<AppointmentDTO> result = appointmentService.findAllAppointments(null, 2L, null);
-        assertEquals(2, result.size());
-        verify(appointmentRepository, times(1)).findAllByPatientId(anyLong());
-    }
-
-    @DisplayName("Display All Appointments - With Param - scheduleId")
-    @Test
-    public void findAllAppointments_success_with_scheduleId() {
-        when(appointmentRepository.findAllByScheduleId(3L)).thenReturn(appointments);
-
-        List<AppointmentDTO> result = appointmentService.findAllAppointments(null, null, 3L);
-        assertEquals(2, result.size());
-        verify(appointmentRepository, times(1)).findAllByScheduleId(anyLong());
-    }
-
-    @DisplayName("Display Appointment By ID - Success")
-    @Test
-    public void findAppointmentById_success() {
-        Appointment appointment = appointments.get(0);
-        AppointmentDTO appointmentDTO = new AppointmentDTO();
-
+        // Mock method call
+        when(appointmentMapper.appointmentToAppointmentResponseDto(any())).thenReturn(appointmentResponseDTO);
         when(appointmentRepository.findById(anyLong())).thenReturn(Optional.of(appointment));
-        when(appointmentMapper.appointmentToAppointmentDto(any())).thenReturn(appointmentDTO);
 
-        AppointmentDTO returnDto = appointmentService.findAppointmentById(anyLong());
+        AppointmentResponseDTO returnDto = appointmentService.findAppointmentById(anyLong());
+
+        // Verify
         assertNotNull(returnDto);
+        assertEquals(appointment.getAppointmentDate(), returnDto.getAppointmentDate());
+        verify(appointmentMapper, times(1)).appointmentToAppointmentResponseDto(any());
         verify(appointmentRepository, times(1)).findById(anyLong());
     }
 
-    @DisplayName("Display Appointment By ID - Not Found")
     @Test
-    public void findAppointmentById_not_found() {
-        when(appointmentRepository.findById(anyLong())).thenReturn(Optional.empty());
-        Exception exception = assertThrows(NotFoundException.class,
-                () -> appointmentService.findAppointmentById(anyLong()));
+    @DisplayName("Find appointment by id - Not found")
+    void findAppointmentById_Not_Found() {
+        // Mock exception
+        Exception exception = assertThrows(NotFoundException.class, () ->
+                appointmentService.findAppointmentById(100L));
+
+        // Verify
+        assertEquals("Appointment Not Found. ID: 100", exception.getMessage());
         verify(appointmentRepository, times(1)).findById(anyLong());
-        assertEquals("Appointment Not Found. ID: 0", exception.getMessage());
     }
 
-    @DisplayName("Save Appointment")
     @Test
-    public void saveAppointment() {
-        Appointment appointment = appointments.get(0);
-        AppointmentDTO appointmentDTO = new AppointmentDTO();
+    @DisplayName("Saving new appointment - New Patient")
+    void saveAppointment_New_Patient() {
+        // Test data
+        Appointment appointment = Appointment.builder().appointmentDate(LocalDate.now().plusDays(3)).build();
+        AppointmentRequestDTO appointmentRequestDTO = AppointmentRequestDTO.builder().appointmentDate(LocalDate.now().plusDays(3))
+                .patientRequestDTO(PatientRequestDTO.builder().build()).build();
+        AppointmentResponseDTO appointmentResponseDTO = AppointmentResponseDTO.builder().appointmentDate(LocalDate.now().plusDays(3)).patientId(1L).build();
+        Patient patient = Patient.builder().id(1L).build();
+        PatientRequestDTO patientRequestDTO = PatientRequestDTO.builder().id(1L).build();
 
+        // Mock method call
+        when(patientRepository.save(any())).thenReturn(patient);
+        when(patientMapper.patientRequestDtoToPatient(any())).thenReturn(patient);
+        when(patientMapper.patientToPatientRequestDto(any())).thenReturn(patientRequestDTO);
+        when(appointmentMapper.appointmentRequestDtoToAppointment(any())).thenReturn(appointment);
+        when(appointmentMapper.appointmentToAppointmentResponseDto(any())).thenReturn(appointmentResponseDTO);
         when(appointmentRepository.save(any())).thenReturn(appointment);
-        when(appointmentMapper.appointmentDtoToAppointment(any())).thenReturn(appointment);
-        when(appointmentMapper.appointmentToAppointmentDto(any())).thenReturn(appointmentDTO);
 
-        AppointmentDTO returnDto = appointmentService.saveAppointment(any());
-        assertNotNull(returnDto);
+        AppointmentResponseDTO savedDto = appointmentService.saveNewAppointment(appointmentRequestDTO);
+
+        // Verify
+        assertEquals(appointmentResponseDTO, savedDto);
+        assertEquals(1L, appointmentResponseDTO.getPatientId());
+        assertEquals(appointment.getAppointmentDate(), savedDto.getAppointmentDate());
+        verify(patientRepository, times(1)).save(any());
+        verify(patientMapper, times(1)).patientRequestDtoToPatient(any());
+        verify(patientMapper, times(1)).patientToPatientRequestDto(any());
+        verify(appointmentMapper, times(1)).appointmentRequestDtoToAppointment(any());
+        verify(appointmentMapper, times(1)).appointmentToAppointmentResponseDto(any());
         verify(appointmentRepository, times(1)).save(any());
     }
 
-    @DisplayName("Delete Appointment - Success")
+    @Disabled
     @Test
-    public void deleteAppointmentById_success() {
-        Appointment appointment = appointments.get(0);
+    @DisplayName("Saving new appointment - Old Patient")
+    void saveAppointment_Old_Patient() {
+        // Test data
+        Appointment appointment = Appointment.builder().appointmentDate(LocalDate.now().plusDays(3)).build();
+        AppointmentRequestDTO appointmentRequestDTO = AppointmentRequestDTO.builder().appointmentDate(LocalDate.now().plusDays(3))
+                .patientRequestDTO(PatientRequestDTO.builder().id(1L).build()).build();
+        AppointmentResponseDTO appointmentResponseDTO = AppointmentResponseDTO.builder().appointmentDate(LocalDate.now().plusDays(3)).patientId(1L).build();
 
+        // Mock method call
+        when(appointmentMapper.appointmentRequestDtoToAppointment(any())).thenReturn(appointment);
+        when(appointmentMapper.appointmentToAppointmentResponseDto(any())).thenReturn(appointmentResponseDTO);
+        when(appointmentRepository.save(any())).thenReturn(appointment);
+
+        AppointmentResponseDTO savedDto = appointmentService.saveNewAppointment(appointmentRequestDTO);
+
+        // Verify
+        assertEquals(appointmentResponseDTO, savedDto);
+        assertEquals(1L, appointmentResponseDTO.getPatientId());
+        assertEquals(appointment.getAppointmentDate(), savedDto.getAppointmentDate());
+        verify(appointmentMapper, times(1)).appointmentRequestDtoToAppointment(any());
+        verify(appointmentMapper, times(1)).appointmentToAppointmentResponseDto(any());
+        verify(appointmentRepository, times(1)).save(any());
+    }
+
+    @Test
+    @DisplayName("Update appointment information - Success")
+    void updateAppointmentStatus_Success() {
+        // Test data
+        Appointment appointment = Appointment.builder().id(1L).appointmentDate(LocalDate.now().plusDays(3)).build();
+        AppointmentUpdateStatusDTO appointmentUpdateStatusDTO = AppointmentUpdateStatusDTO.builder().id(1L).appointmentStatus(AppointmentStatus.APPROVED).build();
+        AppointmentResponseDTO appointmentResponseDTO = AppointmentResponseDTO.builder().id(1L).appointmentStatus(AppointmentStatus.APPROVED).appointmentDate(LocalDate.now().plusDays(3)).build();
+
+        // Mock method call
+        when(appointmentRepository.findById(anyLong())).thenReturn(Optional.of(appointment));
+        when(appointmentMapper.appointmentToAppointmentResponseDto(any())).thenReturn(appointmentResponseDTO);
+        when(appointmentRepository.save(any())).thenReturn(appointment);
+
+        AppointmentResponseDTO savedDto = appointmentService.updateAppointmentStatus(1L, appointmentUpdateStatusDTO);
+
+        // Verify
+        assertEquals(appointmentResponseDTO, savedDto);
+        assertEquals(appointmentUpdateStatusDTO.getAppointmentStatus(), savedDto.getAppointmentStatus());
+        verify(appointmentMapper, times(1)).appointmentToAppointmentResponseDto(any());
+        verify(appointmentRepository, times(1)).save(any());
+        verify(appointmentRepository, times(1)).findById(anyLong());
+    }
+
+    @Test
+    @DisplayName("Update appointment information - Not found")
+    void updateAppointmentStatus_Not_Found() {
+        // Mock exception
+        Exception exception = assertThrows(NotFoundException.class, () ->
+                appointmentService.updateAppointmentStatus(100L, any()));
+
+        // Verify
+        assertEquals("Appointment Not Found. ID: 100", exception.getMessage());
+        verify(appointmentRepository, times(1)).findById(anyLong());
+    }
+
+    @Test
+    @DisplayName("Delete appointment by id - Success")
+    void deleteAppointmentById_Success() {
+        // Test data
+        Appointment appointment = Appointment.builder().id(1L).appointmentDate(LocalDate.now().plusDays(3)).build();
+
+        // Mock method call
         when(appointmentRepository.findById(anyLong())).thenReturn(Optional.of(appointment));
 
         appointmentService.deleteAppointmentById(anyLong());
+
+        // Verify
+        verify(appointmentRepository, times(1)).findById(anyLong());
         verify(appointmentRepository, times(1)).deleteById(anyLong());
     }
 
-    @DisplayName("Delete Appointment - Not Found")
     @Test
-    public void deleteAppointmentById_not_found() {
-        when(appointmentRepository.findById(anyLong())).thenReturn(Optional.empty());
-        Exception exception = assertThrows(NotFoundException.class,
-                () -> appointmentService.deleteAppointmentById(anyLong()));
-        verify(appointmentRepository, times(0)).deleteById(anyLong());
-        assertEquals("Appointment Not Found. ID: 0", exception.getMessage());
+    @DisplayName("Delete appointment by id - Not found")
+    void deleteAppointmentById_Not_Found() {
+        // Mock exception
+        Exception exception = assertThrows(NotFoundException.class, () ->
+                appointmentService.deleteAppointmentById(100L));
+
+        // Verify
+        assertEquals("Appointment Not Found. ID: 100", exception.getMessage());
+        verify(appointmentRepository, times(1)).findById(anyLong());
+    }
+
+    @Test
+    @DisplayName("Find all appointments by doctorId - Success")
+    void findAllAppointmentsByDoctorId_Success() {
+        // Test data
+        Doctor doctor = Doctor.builder().id(1L).build();
+        List<Appointment> appointments = Arrays.asList(
+                Appointment.builder().doctor(doctor).build(),
+                Appointment.builder().doctor(doctor).build());
+
+        // Mock method call
+        when(appointmentRepository.findAllByDoctorId(anyLong())).thenReturn(appointments);
+
+        List<AppointmentResponseDTO> result = appointmentService.findAllAppointmentsByDoctorId(1L);
+
+        // Verify
+        assertEquals(2, result.size());
+        verify(appointmentRepository, times(1)).findAllByDoctorId(anyLong());
+        verify(appointmentMapper, times(result.size())).appointmentToAppointmentResponseDto(any());
+    }
+
+    @Test
+    @DisplayName("Find all appointments by patientId - Success")
+    void findAllAppointmentsByPatientId_Success() {
+        // Test data
+        Patient patient = Patient.builder().id(1L).build();
+        List<Appointment> appointments = Arrays.asList(
+                Appointment.builder().patient(patient).build(),
+                Appointment.builder().patient(patient).build());
+
+        // Mock method call
+        when(appointmentRepository.findAllByPatientId(anyLong())).thenReturn(appointments);
+
+        List<AppointmentResponseDTO> result = appointmentService.findAllAppointmentsByPatientId(1L);
+
+        // Verify
+        assertEquals(2, result.size());
+        verify(appointmentRepository, times(1)).findAllByPatientId(anyLong());
+        verify(appointmentMapper, times(result.size())).appointmentToAppointmentResponseDto(any());
     }
 }

@@ -1,24 +1,26 @@
 package hyk.springframework.clinicappointmentapi.service;
 
 import hyk.springframework.clinicappointmentapi.domain.Doctor;
-import hyk.springframework.clinicappointmentapi.repository.DoctorRepository;
-import hyk.springframework.clinicappointmentapi.web.dto.DoctorDTO;
+import hyk.springframework.clinicappointmentapi.domain.Schedule;
+import hyk.springframework.clinicappointmentapi.dto.doctor.DoctorRequestDTO;
+import hyk.springframework.clinicappointmentapi.dto.doctor.DoctorResponseDTO;
+import hyk.springframework.clinicappointmentapi.dto.mapper.DoctorMapper;
 import hyk.springframework.clinicappointmentapi.exception.NotFoundException;
-import hyk.springframework.clinicappointmentapi.web.mapper.DoctorMapper;
-import org.junit.jupiter.api.BeforeEach;
+import hyk.springframework.clinicappointmentapi.repository.DoctorRepository;
+import hyk.springframework.clinicappointmentapi.repository.ScheduleRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 /**
@@ -30,131 +32,174 @@ class DoctorServiceImplTest {
     DoctorRepository doctorRepository;
 
     @Mock
-    DoctorMapper doctorMapper = DoctorMapper.INSTANCE;
+    ScheduleRepository scheduleRepository;
+
+    @Mock
+    DoctorMapper doctorMapper;
 
     @InjectMocks
     DoctorServiceImpl doctorService;
 
-    List<Doctor> doctors;
-
-    @BeforeEach
-    public void setUp() {
-        doctors = new ArrayList<>();
-        doctors.add(Doctor.builder().name("Dr. Lin Htet").address("Mudon").phoneNumber("09123456789").specialization("Internal Medicine").build());
-        doctors.add(Doctor.builder().name("Dr. Nay Oo").address("Yangon").phoneNumber("09123456789").specialization("Internal Medicine").build());
-
-        MockitoAnnotations.openMocks(this);
-        doctorService =new DoctorServiceImpl(doctorRepository, doctorMapper);
-    }
-
-    @DisplayName("Display All Doctors")
     @Test
-    public void findAllDoctors_success() {
+    @DisplayName("Find all doctors - Success")
+    void findAllDoctors_Success() {
+        // Test data
+        List<Doctor> doctors = Arrays.asList(
+                Doctor.builder().build(),
+                Doctor.builder().build());
+
+        // Mock method call
         when(doctorRepository.findAll()).thenReturn(doctors);
 
-        List<DoctorDTO> result = doctorService.findAllDoctors();
+        List<DoctorResponseDTO> result = doctorService.findAllDoctors();
+
+        // Verify
         assertEquals(2, result.size());
         verify(doctorRepository, times(1)).findAll();
+        verify(doctorMapper, times(result.size())).doctorToDoctorResponseDto(any());
+
     }
 
-    @DisplayName("Display Doctor By ID - Success")
     @Test
-    public void findDoctorById_success() {
-        Doctor doctor = doctors.get(0);
-        DoctorDTO doctorDTO = new DoctorDTO();
+    @DisplayName("Find doctor by id - Success")
+    void findDoctorById_Success() {
+        // Test data
+        Doctor doctor = Doctor.builder().name("Dr. Lin Htet").build();
+        DoctorResponseDTO doctorResponseDTO = DoctorResponseDTO.builder().name("Dr. Lin Htet").build();
 
+        // Mock method call
+        when(doctorMapper.doctorToDoctorResponseDto(any())).thenReturn(doctorResponseDTO);
         when(doctorRepository.findById(anyLong())).thenReturn(Optional.of(doctor));
-        when(doctorMapper.doctorToDoctorDTto(any())).thenReturn(doctorDTO);
 
-        DoctorDTO returnDto = doctorService.findDoctorById(anyLong());
+        DoctorResponseDTO returnDto = doctorService.findDoctorById(anyLong());
+
+        // Verify
         assertNotNull(returnDto);
+        assertEquals(doctor.getName(), returnDto.getName());
+        verify(doctorMapper, times(1)).doctorToDoctorResponseDto(any());
         verify(doctorRepository, times(1)).findById(anyLong());
-
     }
 
-    @DisplayName("Display Doctor By ID - Not Found")
     @Test
-    public void findDoctorById_not_found() {
-        when(doctorRepository.findById(anyLong())).thenReturn(Optional.empty());
-        Exception exception = assertThrows(NotFoundException.class,
-                () -> doctorService.findDoctorById(anyLong()));
+    @DisplayName("Find doctor by id - Not found")
+    void findDoctorById_Not_Found() {
+        // Mock exception
+        Exception exception = assertThrows(NotFoundException.class, () ->
+                doctorService.findDoctorById(100L));
+
+        // Verify
+        assertEquals("Doctor Not Found. ID: 100", exception.getMessage());
         verify(doctorRepository, times(1)).findById(anyLong());
-        assertEquals("Doctor Not Found. ID: 0", exception.getMessage());
     }
 
-    @DisplayName("Save New Doctor")
     @Test
-    public void saveNewDoctor_success() {
-        Doctor doctor = doctors.get(0);
-        DoctorDTO doctorDTO = new DoctorDTO();
+    @DisplayName("Saving new doctor - Success")
+    void saveNewDoctor() {
+        // Test data
+        Doctor doctor = Doctor.builder().name("Dr. Lin Htet").build();
+        DoctorRequestDTO doctorRequestDTO = DoctorRequestDTO.builder().name("Dr. Lin Htet").build();
+        DoctorResponseDTO doctorResponseDTO = DoctorResponseDTO.builder().name("Dr. Lin Htet").build();
 
+        // Mock method call
+        when(doctorMapper.doctorRequestDtoToDoctor(any())).thenReturn(doctor);
+        when(doctorMapper.doctorToDoctorResponseDto(any())).thenReturn(doctorResponseDTO);
         when(doctorRepository.save(any())).thenReturn(doctor);
-        when(doctorMapper.doctorDtoToDoctor(any())).thenReturn(doctor);
-        when(doctorMapper.doctorToDoctorDTto(any())).thenReturn(doctorDTO);
 
-        DoctorDTO returnDto = doctorService.saveNewDoctor(any());
-        assertNotNull(returnDto);
+        DoctorResponseDTO savedDto = doctorService.saveNewDoctor(doctorRequestDTO);
+
+        // Verify
+        assertEquals(doctorResponseDTO, savedDto);
+        assertEquals(doctor.getName(), savedDto.getName());
+        verify(doctorMapper, times(1)).doctorRequestDtoToDoctor(any());
+        verify(doctorMapper, times(1)).doctorToDoctorResponseDto(any());
         verify(doctorRepository, times(1)).save(any());
     }
 
-    @DisplayName("Update Existing Doctor - Success")
     @Test
-    public void updateDoctor_success() {
-        Doctor doctor = doctors.get(0);
-        DoctorDTO doctorDTO = new DoctorDTO();
-        doctorDTO.setId(doctor.getId());
-        doctorDTO.setName(doctor.getName());
-        doctorDTO.setAddress(doctor.getAddress());
-        doctorDTO.setPhoneNumber("09222222222");
-        doctorDTO.setDegree(doctor.getDegree());
-        doctorDTO.setSpecialization("Cardiology");
+    @DisplayName("Update doctor information - Success")
+    void updateDoctor_Success() {
+        // Test data
+        Doctor doctor = Doctor.builder().id(1L).name("Dr. Lin Htet").build();
+        DoctorRequestDTO doctorRequestDTO = DoctorRequestDTO.builder().id(1L).name("Dr. Lin Htet").build();
+        DoctorResponseDTO doctorResponseDTO = DoctorResponseDTO.builder().id(1L).name("Dr. Lin Htet").build();
 
+        // Mock method call
         when(doctorRepository.findById(anyLong())).thenReturn(Optional.of(doctor));
+        when(doctorMapper.doctorToDoctorResponseDto(any())).thenReturn(doctorResponseDTO);
         when(doctorRepository.save(any())).thenReturn(doctor);
-        when(doctorMapper.doctorToDoctorDTto(any())).thenReturn(doctorDTO);
 
-        DoctorDTO returnDto = doctorService.updateDoctor(anyLong(), doctorDTO);
-        assertNotNull(returnDto);
-        assertEquals(doctorDTO.getName(), returnDto.getName());
-        assertEquals(doctorDTO.getAddress(), returnDto.getAddress());
-        assertEquals(doctorDTO.getPhoneNumber(), returnDto.getPhoneNumber());
-        assertEquals(doctorDTO.getDegree(), returnDto.getDegree());
-        assertEquals(doctorDTO.getSpecialization(), returnDto.getSpecialization());
-        verify(doctorRepository, times(1)).save(any());
-    }
+        DoctorResponseDTO savedDto = doctorService.updateDoctor(1L, doctorRequestDTO);
 
-    @DisplayName("Update Existing Doctor - Not Found")
-    @Test
-    public void updateDoctor_not_found() {
-        DoctorDTO doctorDTO = new DoctorDTO();
-
-        when(doctorRepository.findById(anyLong())).thenReturn(Optional.empty());
-
-        Exception exception = assertThrows(NotFoundException.class,
-                () -> doctorService.updateDoctor(anyLong(), doctorDTO));
+        // Verify
+        assertEquals(doctorResponseDTO, savedDto);
+        assertEquals(doctor.getName(), savedDto.getName());
+        verify(doctorMapper, times(1)).doctorToDoctorResponseDto(any());
         verify(doctorRepository, times(1)).findById(anyLong());
-        assertEquals("Doctor Not Found. ID: 0", exception.getMessage());
+        verify(doctorRepository, times(1)).save(any());
+        verify(doctorRepository, times(1)).findById(anyLong());
     }
 
-    @DisplayName("Delete Appointment - Success")
     @Test
-    public void deleteAppointmentById_success() {
-        Doctor doctor = doctors.get(0);
+    @DisplayName("Update doctor information - Not found")
+    void updateDoctor_Not_Found() {
+        // Mock exception
+        Exception exception = assertThrows(NotFoundException.class, () ->
+                doctorService.updateDoctor(100L, any()));
 
+        // Verify
+        assertEquals("Doctor Not Found. ID: 100", exception.getMessage());
+        verify(doctorRepository, times(1)).findById(anyLong());
+    }
+
+    @Test
+    @DisplayName("Delete schedule by id - Success")
+    void deleteDoctorById_Success() {
+        // Test data
+        Doctor doctor = Doctor.builder().id(1L).name("Dr. Lin Htet").build();
+        List<Schedule> schedules = Arrays.asList(
+                Schedule.builder().doctor(doctor).build(),
+                Schedule.builder().doctor(doctor).build());
+
+        // Mock method call
         when(doctorRepository.findById(anyLong())).thenReturn(Optional.of(doctor));
+        when(scheduleRepository.findAllByDoctorId(anyLong())).thenReturn(schedules);
 
-        doctorService.deleteDoctorById(anyLong());
+        doctorService.deleteDoctorById(1L);
+
+        // Verify
+        verify(doctorRepository, times(1)).findById(anyLong());
         verify(doctorRepository, times(1)).deleteById(anyLong());
+        verify(scheduleRepository, times(1)).findAllByDoctorId(anyLong());
     }
 
-    @DisplayName("Delete Appointment - Not Found")
     @Test
-    public void deleteDoctorById_not_found() {
-        when(doctorRepository.findById(anyLong())).thenReturn(Optional.empty());
+    @DisplayName("Delete schedule by id - Not found")
+    void deleteDoctorById_Not_Found() {
+        // Mock exception
+        Exception exception = assertThrows(NotFoundException.class, () ->
+                doctorService.deleteDoctorById(100L));
 
-        Exception exception = assertThrows(NotFoundException.class,
-                () -> doctorService.deleteDoctorById(anyLong()));
-        verify(doctorRepository, times(0)).deleteById(anyLong());
-        assertEquals("Doctor Not Found. ID: 0", exception.getMessage());
+        // Verify
+        assertEquals("Doctor Not Found. ID: 100", exception.getMessage());
+        verify(doctorRepository, times(1)).findById(anyLong());
+    }
+
+    @Test
+    @DisplayName("Find all doctors by specialization - Success")
+    void findAllDoctorsBySpecialization() {
+        // Test data
+        List<Doctor> doctors = Arrays.asList(
+                Doctor.builder().specialization("Cardiology").build(),
+                Doctor.builder().specialization("Cardiology").build());
+
+        // Mock method call
+        when(doctorRepository.findAllBySpecialization(anyString())).thenReturn(doctors);
+
+        List<DoctorResponseDTO> result = doctorService.findAllDoctorsBySpecialization("Cardiology");
+
+        // Verify
+        assertEquals(2, result.size());
+        verify(doctorRepository, times(1)).findAllBySpecialization(anyString());
+        verify(doctorMapper, times(result.size())).doctorToDoctorResponseDto(any());
     }
 }

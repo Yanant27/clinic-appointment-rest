@@ -1,28 +1,28 @@
 package hyk.springframework.clinicappointmentapi.service;
 
+import hyk.springframework.clinicappointmentapi.domain.Appointment;
 import hyk.springframework.clinicappointmentapi.domain.Doctor;
 import hyk.springframework.clinicappointmentapi.domain.Schedule;
+import hyk.springframework.clinicappointmentapi.dto.mapper.ScheduleMapper;
+import hyk.springframework.clinicappointmentapi.dto.schedule.ScheduleRequestDTO;
+import hyk.springframework.clinicappointmentapi.dto.schedule.ScheduleResponseDTO;
+import hyk.springframework.clinicappointmentapi.exception.NotFoundException;
+import hyk.springframework.clinicappointmentapi.repository.AppointmentRepository;
 import hyk.springframework.clinicappointmentapi.repository.DoctorRepository;
 import hyk.springframework.clinicappointmentapi.repository.ScheduleRepository;
-import hyk.springframework.clinicappointmentapi.web.dto.ScheduleDTO;
-import hyk.springframework.clinicappointmentapi.exception.NotFoundException;
-import hyk.springframework.clinicappointmentapi.web.mapper.ScheduleMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 /**
@@ -34,149 +34,229 @@ class ScheduleServiceImplTest {
     ScheduleRepository scheduleRepository;
 
     @Mock
+    AppointmentRepository appointmentRepository;
+
+    @Mock
     DoctorRepository doctorRepository;
 
     @Mock
-    ScheduleMapper scheduleMapper = ScheduleMapper.INSTANCE;
+    ScheduleMapper scheduleMapper;
 
     @InjectMocks
     ScheduleServiceImpl scheduleService;
 
-    List<Schedule> schedules;
-    Doctor doctor;
-
-    @BeforeEach
-    public void setUp() {
-        schedules = new ArrayList<>();
-        doctor = Doctor.builder().name("Dr. Lin Htet").address("Mudon").phoneNumber("09123456789").specialization("Internal Medicine").build();
-        schedules.add(Schedule.builder()
-                .date(LocalDate.of(2022, 7, 7))
-                .startTime(LocalTime.of(10,0))
-                .endTime(LocalTime.of(21, 0))
-                .doctor(doctor).build());
-        schedules.add(Schedule.builder()
-                .date(LocalDate.of(2022, 7, 8))
-                .startTime(LocalTime.of(10,0))
-                .endTime(LocalTime.of(21, 0))
-                .doctor(doctor).build());
-        MockitoAnnotations.openMocks(this);
-        scheduleService =new ScheduleServiceImpl(scheduleRepository, doctorRepository, scheduleMapper);
-    }
-
-    @DisplayName("Display All Schedules")
     @Test
-    public void findAllSchedules_success() {
-        when(scheduleRepository.findAll()).thenReturn(schedules);
+    @DisplayName("Find all schedules - Success")
+    void findAllSchedules_Success() {
+        // Test data
+        List<Schedule> scheduleList = Arrays.asList(
+                Schedule.builder().build(),
+                Schedule.builder().build());
 
-        List<ScheduleDTO> result = scheduleService.findAllSchedules(null);
+        // Mock method call
+        when(scheduleRepository.findAll()).thenReturn(scheduleList);
+
+        List<ScheduleResponseDTO> result = scheduleService.findAllSchedules();
+
+        // Verify
         assertEquals(2, result.size());
         verify(scheduleRepository, times(1)).findAll();
+        verify(scheduleMapper, times(result.size())).scheduleToScheduleResponseDto(any());
     }
 
-    @DisplayName("Display All Schedules - With Param - doctorId")
     @Test
-    public void findAllSchedules_success_with_doctorId() {
-        when(scheduleRepository.findAllByDoctorId(1L)).thenReturn(schedules);
+    @DisplayName("Find schedule by id - Success")
+    void findScheduleById_Success() {
+        // Test data
+        Schedule schedule = Schedule.builder().dayOfWeek("Monday").build();
+        ScheduleResponseDTO scheduleResponseDTO = ScheduleResponseDTO.builder().dayOfWeek("Monday").build();
 
-        List<ScheduleDTO> result = scheduleService.findAllSchedules(1L);
-        assertEquals(2, result.size());
-        verify(scheduleRepository, times(1)).findAllByDoctorId(anyLong());
-    }
-
-    @DisplayName("Display Schedule By ID - Success")
-    @Test
-    public void findScheduleById_success() {
-        Schedule Schedule = schedules.get(0);
-        ScheduleDTO ScheduleDTO = new ScheduleDTO();
-
-        when(scheduleRepository.findById(anyLong())).thenReturn(Optional.of(Schedule));
-        when(scheduleMapper.scheduleToScheduleDto(any())).thenReturn(ScheduleDTO);
-
-        ScheduleDTO returnDto = scheduleService.findScheduleById(anyLong());
-        assertNotNull(returnDto);
-        verify(scheduleRepository, times(1)).findById(anyLong());
-    }
-
-    @DisplayName("Display Schedule By ID - Not Found")
-    @Test
-    public void findScheduleById_not_found() {
-        when(scheduleRepository.findById(anyLong())).thenReturn(Optional.empty());
-        Exception exception = assertThrows(NotFoundException.class,
-                () -> scheduleService.findScheduleById(anyLong()));
-        verify(scheduleRepository, times(1)).findById(anyLong());
-        assertEquals("Schedule Not Found. ID: 0", exception.getMessage());
-    }
-
-    @DisplayName("Save New Schedule")
-    @Test
-    public void saveNewSchedule_success() {
-        Schedule Schedule = schedules.get(0);
-        ScheduleDTO ScheduleDTO = new ScheduleDTO();
-
-        when(scheduleRepository.save(any())).thenReturn(Schedule);
-        when(scheduleMapper.scheduleDtoToSchedule(any())).thenReturn(Schedule);
-        when(scheduleMapper.scheduleToScheduleDto(any())).thenReturn(ScheduleDTO);
-
-        ScheduleDTO returnDto = scheduleService.saveNewSchedule(any());
-        assertNotNull(returnDto);
-        verify(scheduleRepository, times(1)).save(any());
-    }
-
-    @DisplayName("Update Existing Schedule - Success")
-    @Test
-    public void updateSchedule_success() {
-        Schedule schedule = schedules.get(0);
-        ScheduleDTO scheduleDTO = new ScheduleDTO();
-        scheduleDTO.setId(schedule.getId());
-        scheduleDTO.setDate(schedule.getDate());
-        scheduleDTO.setStartTime(schedule.getStartTime());
-        scheduleDTO.setEndTime(schedule.getEndTime());
-        scheduleDTO.setDoctorId(schedule.getDoctor().getId());
-        scheduleDTO.setDoctorName(schedule.getDoctor().getName());
-
+        // Mock method call
+        when(scheduleMapper.scheduleToScheduleResponseDto(any())).thenReturn(scheduleResponseDTO);
         when(scheduleRepository.findById(anyLong())).thenReturn(Optional.of(schedule));
-        when(doctorRepository.findById(scheduleDTO.getDoctorId())).thenReturn(Optional.of(doctor));
-        when(scheduleRepository.save(any())).thenReturn(schedule);
-        when(scheduleMapper.scheduleToScheduleDto(any())).thenReturn(scheduleDTO);
 
-        ScheduleDTO returnDto = scheduleService.updateSchedule(anyLong(), scheduleDTO);
+        ScheduleResponseDTO returnDto = scheduleService.findScheduleById(anyLong());
+
+        // Verify
         assertNotNull(returnDto);
-        assertEquals(scheduleDTO.getId(), returnDto.getId());
+        assertEquals(schedule.getDayOfWeek(), returnDto.getDayOfWeek());
+        verify(scheduleMapper, times(1)).scheduleToScheduleResponseDto(any());
+        verify(scheduleRepository, times(1)).findById(anyLong());
+
+    }
+
+    @Test
+    @DisplayName("Find schedule by id - Not found")
+    void findScheduleById_Not_Found() {
+        // Mock exception
+        Exception exception = assertThrows(NotFoundException.class, () ->
+                scheduleService.findScheduleById(100L));
+
+        // Verify
+        assertEquals("Schedule Not Found. ID: 100", exception.getMessage());
+        verify(scheduleRepository, times(1)).findById(anyLong());
+    }
+
+    @Test
+    @DisplayName("Saving new schedule - Success")
+    void saveNewSchedule_Success() {
+        // Test data
+        Schedule schedule = Schedule.builder().dayOfWeek("Monday").build();
+        ScheduleResponseDTO scheduleResponseDTO = ScheduleResponseDTO.builder().dayOfWeek("Monday").build();
+        ScheduleRequestDTO scheduleRequestDTO = ScheduleRequestDTO.builder().dayOfWeek("Monday").build();
+
+        // Mock method call
+        when(scheduleMapper.scheduleRequestDtoToSchedule(any())).thenReturn(schedule);
+        when(scheduleMapper.scheduleToScheduleResponseDto(any())).thenReturn(scheduleResponseDTO);
+        when(scheduleRepository.save(any())).thenReturn(schedule);
+
+        ScheduleResponseDTO savedDto = scheduleService.saveNewSchedule(scheduleRequestDTO);
+
+        // Verify
+        assertEquals(scheduleResponseDTO, savedDto);
+        assertEquals(schedule.getDayOfWeek(), savedDto.getDayOfWeek());
+        verify(scheduleMapper, times(1)).scheduleRequestDtoToSchedule(any());
+        verify(scheduleMapper, times(1)).scheduleToScheduleResponseDto(any());
         verify(scheduleRepository, times(1)).save(any());
     }
 
-    @DisplayName("Update Existing Schedule - Not Found")
     @Test
-    public void updateSchedule_not_found() {
-        ScheduleDTO ScheduleDTO = new ScheduleDTO();
+    @DisplayName("Update schedule information - Success")
+    void updateSchedule_Success() {
+        // Test data
+        Schedule schedule = Schedule.builder().dayOfWeek("Monday").build();
+        Doctor doctor = Doctor.builder().id(2L).build();
+        ScheduleResponseDTO scheduleResponseDTO = ScheduleResponseDTO.builder().id(1L).dayOfWeek("Monday").doctorId(2L).build();
+        ScheduleRequestDTO scheduleRequestDTO = ScheduleRequestDTO.builder().id(1L).dayOfWeek("Monday").doctorId(2L).build();
 
-        when(scheduleRepository.findById(anyLong())).thenReturn(Optional.empty());
+        // Mock method call
+        when(scheduleRepository.findById(anyLong())).thenReturn(Optional.of(schedule));
+        when(doctorRepository.findById(anyLong())).thenReturn(Optional.of(doctor));
+        when(scheduleMapper.scheduleToScheduleResponseDto(any())).thenReturn(scheduleResponseDTO);
+        when(scheduleRepository.save(any())).thenReturn(schedule);
 
-        Exception exception = assertThrows(NotFoundException.class,
-                () -> scheduleService.updateSchedule(anyLong(), ScheduleDTO));
+        ScheduleResponseDTO savedDto = scheduleService.updateSchedule(1L, scheduleRequestDTO);
+
+        // Verify
+        assertEquals(scheduleResponseDTO, savedDto);
+        assertEquals(schedule.getDayOfWeek(), savedDto.getDayOfWeek());
+        verify(scheduleMapper, times(1)).scheduleToScheduleResponseDto(any());
         verify(scheduleRepository, times(1)).findById(anyLong());
-        assertEquals("Schedule Not Found. ID: 0", exception.getMessage());
+        verify(scheduleRepository, times(1)).save(any());
+        verify(doctorRepository, times(1)).findById(anyLong());
     }
 
-    @DisplayName("Delete Appointment - Success")
     @Test
-    public void deleteAppointmentById_success() {
-        Schedule Schedule = schedules.get(0);
+    @DisplayName("Update schedule information - Schedule not found")
+    void updateSchedule_Schedule_Not_Found() {
+        // Mock exception
+        Exception exception = assertThrows(NotFoundException.class, () ->
+                scheduleService.updateSchedule(100L, any()));
 
-        when(scheduleRepository.findById(anyLong())).thenReturn(Optional.of(Schedule));
+        // Verify
+        assertEquals("Schedule Not Found. ID: 100", exception.getMessage());
+        verify(scheduleRepository, times(1)).findById(anyLong());
+    }
+
+    @Test
+    @DisplayName("Update schedule information - Doctor not found")
+    void updateSchedule_Doctor_Not_Found() {
+        Schedule schedule = Schedule.builder().id(1L).dayOfWeek("Monday").build();
+        ScheduleRequestDTO scheduleRequestDTO = ScheduleRequestDTO.builder().id(1L).dayOfWeek("Monday").doctorId(100L).build();
+
+        // Mock method call
+        when(scheduleRepository.findById(anyLong())).thenReturn(Optional.of(schedule));
+
+        // Mock exception
+        Exception exception = assertThrows(NotFoundException.class, () ->
+                scheduleService.updateSchedule(anyLong(), scheduleRequestDTO));
+
+        // Verify
+        assertEquals("Doctor Not Found. ID: 100", exception.getMessage());
+        verify(scheduleRepository, times(1)).findById(anyLong());
+        verify(doctorRepository, times(1)).findById(anyLong());
+    }
+
+    @Test
+    @DisplayName("Delete schedule by id - Success")
+    void deleteScheduleById_Success() {
+        // Test data
+        Schedule schedule = Schedule.builder().id(1L).dayOfWeek("Monday").build();
+
+        // Mock method call
+        when(scheduleRepository.findById(anyLong())).thenReturn(Optional.of(schedule));
 
         scheduleService.deleteScheduleById(anyLong());
+
+        // Verify
+        verify(scheduleRepository, times(1)).findById(anyLong());
         verify(scheduleRepository, times(1)).deleteById(anyLong());
     }
 
-    @DisplayName("Delete Appointment - Not Found")
     @Test
-    public void deleteScheduleById_not_found() {
-        when(scheduleRepository.findById(anyLong())).thenReturn(Optional.empty());
+    @DisplayName("Delete schedule by id - Not found")
+    void deleteScheduleById_Not_Found() {
+        // Mock exception
+        Exception exception = assertThrows(NotFoundException.class, () ->
+                scheduleService.deleteScheduleById(100L));
 
-        Exception exception = assertThrows(NotFoundException.class,
-                () -> scheduleService.deleteScheduleById(anyLong()));
-        verify(scheduleRepository, times(0)).deleteById(anyLong());
-        assertEquals("Schedule Not Found. ID: 0", exception.getMessage());
+        // Verify
+        assertEquals("Schedule Not Found. ID: 100", exception.getMessage());
+        verify(scheduleRepository, times(1)).findById(anyLong());
+    }
+
+    @Test
+    @DisplayName("Find all schedules by doctorId - Success")
+    void findAllSchedulesByDoctorId_Success() {
+        // Test data
+        Doctor doctor = Doctor.builder().id(1L).build();
+        List<Schedule> scheduleList = Arrays.asList(
+                Schedule.builder().doctor(doctor).build(),
+                Schedule.builder().doctor(doctor).build());
+
+        // Mock method call
+        when(scheduleRepository.findAllByDoctorId(anyLong())).thenReturn(scheduleList);
+
+        List<ScheduleResponseDTO> result = scheduleService.findAllSchedulesByDoctorId(anyLong());
+
+        // Verify
+        assertEquals(2, result.size());
+        verify(scheduleRepository, times(1)).findAllByDoctorId(anyLong());
+        verify(scheduleMapper, times(result.size())).scheduleToScheduleResponseDto(any());
+    }
+
+    @Test
+    @DisplayName("Logically delete schedule by doctorId - Success")
+    void logicalDeleteScheduleByDoctorId_Success() {
+        // Test data
+        Schedule schedule = Schedule.builder().id(1L).doctor(Doctor.builder().id(2L).build()).build();
+        List<Appointment> appointments = Arrays.asList(
+                Appointment.builder().id(10L).schedule(schedule).build(),
+                Appointment.builder().id(11L).schedule(schedule).build());
+
+        // Mock method call
+        when(scheduleRepository.findByIdAndDoctorId(anyLong(), anyLong())).thenReturn(Optional.of(schedule));
+        when(scheduleRepository.save(any())).thenReturn(schedule);
+        when(appointmentRepository.findAllByScheduleId(anyLong())).thenReturn(appointments);
+
+        scheduleService.logicalDeleteScheduleByDoctorId(1L, 2L);
+
+        // Verify
+        verify(scheduleRepository, times(1)).findByIdAndDoctorId(anyLong(), anyLong());
+        verify(scheduleRepository, times(1)).save(any());
+        verify(appointmentRepository, times(1)).deleteAll(any());
+        verify(appointmentRepository, times(1)).findAllByScheduleId(anyLong());
+    }
+
+    @Test
+    @DisplayName("Logically delete schedule by doctorId - Not found")
+    void logicalDeleteScheduleByDoctorId_Not_Found() {
+        // Mock exception
+        Exception exception = assertThrows(NotFoundException.class, () ->
+                scheduleService.logicalDeleteScheduleByDoctorId(100L, 200L));
+
+        // Verify
+        assertEquals("Schedule Not Found. ID: 100", exception.getMessage());
+        verify(scheduleRepository, times(1)).findByIdAndDoctorId(anyLong(), anyLong());
     }
 }
