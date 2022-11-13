@@ -2,6 +2,7 @@ package hyk.springframework.clinicappointmentapi.domain;
 
 import hyk.springframework.clinicappointmentapi.enums.ScheduleStatus;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -10,11 +11,10 @@ import java.util.List;
 /**
  * @author Htoo Yanant Khin
  **/
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@SuperBuilder(toBuilder = true)
 @Entity
 public class Schedule extends BaseEntity {
 

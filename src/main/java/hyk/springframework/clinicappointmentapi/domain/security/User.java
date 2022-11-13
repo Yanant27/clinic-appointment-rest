@@ -1,7 +1,5 @@
 package hyk.springframework.clinicappointmentapi.domain.security;
 
-import hyk.springframework.clinicappointmentapi.domain.Doctor;
-import hyk.springframework.clinicappointmentapi.domain.Patient;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;

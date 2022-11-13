@@ -1,7 +1,9 @@
 package hyk.springframework.clinicappointmentapi.domain;
 
-import hyk.springframework.clinicappointmentapi.enums.Gender;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -13,22 +15,15 @@ import java.util.List;
 /**
  * @author Htoo Yanant Khin
  **/
-@Getter
-@Setter
-@Entity
+@Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
+@SuperBuilder(toBuilder = true)
+@Entity
 public class Doctor extends PersonEntity {
 
-    @Builder
-    public Doctor(String name, Long age, Gender gender, String address, String phoneNumber, String qualifications, String specialization, List<Schedule> schedules, List<Appointment> appointments) {
-        super(name, age, gender, address, phoneNumber);
-        this.qualifications = qualifications;
-        this.specialization = specialization;
-        this.schedules = schedules;
-        this.appointments = appointments;
-    }
-
     private String qualifications;
+
     private String specialization;
 
     @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
