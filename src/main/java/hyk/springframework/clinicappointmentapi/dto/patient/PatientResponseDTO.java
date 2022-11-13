@@ -1,10 +1,9 @@
 package hyk.springframework.clinicappointmentapi.dto.patient;
 
 import hyk.springframework.clinicappointmentapi.dto.appointment.AppointmentResponseDTO;
-import hyk.springframework.clinicappointmentapi.enums.Gender;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -13,12 +12,7 @@ import java.util.List;
  **/
 @Data
 @EqualsAndHashCode(callSuper = true)
+@SuperBuilder(toBuilder = true)
 public class PatientResponseDTO extends PatientRequestDTO {
     private List<AppointmentResponseDTO> appointments;
-
-    @Builder
-    public PatientResponseDTO(Long id, String name, Long age, Gender gender, String address, String phoneNumber, List<AppointmentResponseDTO> appointments) {
-        super(id, name, age, gender, address, phoneNumber);
-        this.appointments = appointments;
-    }
 }

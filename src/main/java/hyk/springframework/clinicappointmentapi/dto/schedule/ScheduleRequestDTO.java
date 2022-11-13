@@ -4,17 +4,16 @@ import hyk.springframework.clinicappointmentapi.dto.BaseDTO;
 import hyk.springframework.clinicappointmentapi.enums.ScheduleStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import javax.validation.constraints.NotNull;
-import java.util.Objects;
 
 /**
  * @author Htoo Yanant Khin
  **/
 @Data
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class ScheduleRequestDTO extends BaseDTO {
 
     @NotNull
@@ -26,12 +25,4 @@ public class ScheduleRequestDTO extends BaseDTO {
     private ScheduleStatus scheduleStatus;
 
     private Long doctorId;
-
-    public ScheduleRequestDTO(Long id, String dayOfWeek, String timeslot, ScheduleStatus scheduleStatus, Long doctorId) {
-        super(id);
-        this.dayOfWeek = dayOfWeek;
-        this.timeslot = timeslot;
-        this.scheduleStatus = Objects.requireNonNullElse(scheduleStatus, ScheduleStatus.AVAILABLE);
-        this.doctorId = doctorId;
-    }
 }

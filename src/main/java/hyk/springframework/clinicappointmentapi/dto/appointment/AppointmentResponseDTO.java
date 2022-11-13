@@ -4,6 +4,7 @@ import hyk.springframework.clinicappointmentapi.dto.BaseDTO;
 import hyk.springframework.clinicappointmentapi.enums.AppointmentStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 
@@ -12,6 +13,7 @@ import java.time.LocalDate;
  **/
 @Data
 @EqualsAndHashCode(callSuper = true)
+@SuperBuilder(toBuilder = true)
 public class AppointmentResponseDTO extends BaseDTO {
     /*
     Autofill doctor data, input field in disabled.
@@ -35,18 +37,4 @@ public class AppointmentResponseDTO extends BaseDTO {
     private Long scheduleId;
 
     private String timeslot;
-
-    public AppointmentResponseDTO(Long id, Long doctorId, String doctorName, String specialization, Long patientId, String patientName, String patientPhoneNumber, LocalDate appointmentDate, AppointmentStatus appointmentStatus, Long scheduleId, String timeslot) {
-        super(id);
-        this.doctorId = doctorId;
-        this.doctorName = doctorName;
-        this.specialization = specialization;
-        this.patientId = patientId;
-        this.patientName = patientName;
-        this.patientPhoneNumber = patientPhoneNumber;
-        this.appointmentDate = appointmentDate;
-        this.appointmentStatus = appointmentStatus;
-        this.scheduleId = scheduleId;
-        this.timeslot = timeslot;
-    }
 }

@@ -2,7 +2,9 @@ package hyk.springframework.clinicappointmentapi.dto;
 
 import hyk.springframework.clinicappointmentapi.enums.Gender;
 import hyk.springframework.clinicappointmentapi.validation.ValidPhoneNumber;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 
 import javax.validation.constraints.NotEmpty;
 
@@ -11,7 +13,7 @@ import javax.validation.constraints.NotEmpty;
  **/
 @Data
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class PersonDTO extends NamedDTO{
 
     private Long age;
@@ -23,12 +25,4 @@ public class PersonDTO extends NamedDTO{
     @NotEmpty
     @ValidPhoneNumber
     private String phoneNumber;
-
-    public PersonDTO(Long id, String name, Long age, Gender gender, String address, String phoneNumber) {
-        super(id, name);
-        this.age = age;
-        this.gender = gender;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
-    }
 }

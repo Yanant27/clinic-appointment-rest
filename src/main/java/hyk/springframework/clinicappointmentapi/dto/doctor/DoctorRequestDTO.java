@@ -1,8 +1,9 @@
 package hyk.springframework.clinicappointmentapi.dto.doctor;
 
 import hyk.springframework.clinicappointmentapi.dto.PersonDTO;
-import hyk.springframework.clinicappointmentapi.enums.Gender;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 
 import javax.validation.constraints.NotNull;
 
@@ -11,7 +12,7 @@ import javax.validation.constraints.NotNull;
  **/
 @Data
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class DoctorRequestDTO extends PersonDTO {
 
     @NotNull
@@ -19,10 +20,4 @@ public class DoctorRequestDTO extends PersonDTO {
 
     @NotNull
     private String specialization;
-
-    public DoctorRequestDTO(Long id, String name, Long age, Gender gender, String address, String phoneNumber, String qualifications, String specialization) {
-        super(id, name, age, gender, address, phoneNumber);
-        this.qualifications = qualifications;
-        this.specialization = specialization;
-    }
 }
