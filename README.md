@@ -17,6 +17,8 @@ In this API,
 - Spring Data JPA
 - Spring Web
 - Spring Boot DevTools
+- Spring Security
+- Json Web Token
 - Lombok
 - H2 Database
 - MySQL Driver
