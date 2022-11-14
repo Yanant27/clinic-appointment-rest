@@ -38,9 +38,9 @@ public class AppointmentController {
 
     @PreAuthorize("hasAnyRole('ADMIN','PATIENT')")
     @PostMapping
-    public ResponseEntity<AppointmentResponseDTO> saveAppointment(@RequestBody AppointmentRequestDTO appointmentRequestDTO) {
+    public ResponseEntity<AppointmentResponseDTO> saveNewAppointment(@RequestBody AppointmentRequestDTO appointmentRequestDTO) {
         HttpHeaders headers = new HttpHeaders();
-        AppointmentResponseDTO savedDto = appointmentService.saveAppointment(appointmentRequestDTO);
+        AppointmentResponseDTO savedDto = appointmentService.saveNewAppointment(appointmentRequestDTO);
         headers.setLocation(UriComponentsBuilder.newInstance()
                 .path("/api/v1/appointments/{appointmentId}").buildAndExpand(savedDto.getId()).toUri());
         return new ResponseEntity<>(savedDto, headers, HttpStatus.CREATED);
