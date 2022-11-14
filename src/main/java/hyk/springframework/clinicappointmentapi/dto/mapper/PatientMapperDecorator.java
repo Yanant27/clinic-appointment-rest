@@ -44,6 +44,7 @@ public class PatientMapperDecorator implements PatientMapper {
         // Update data
         patient.setName(patientRequestDTO.getName());
         patient.setAge(patientRequestDTO.getAge());
+        patient.setDateOfBirth(patientRequestDTO.getDateOfBirth());
         patient.setGender(patientRequestDTO.getGender());
         patient.setAddress(patientRequestDTO.getAddress());
         patient.setPhoneNumber(patientRequestDTO.getPhoneNumber());
@@ -59,6 +60,7 @@ public class PatientMapperDecorator implements PatientMapper {
         patientResponseDTO.setId(patient.getId());
         patientResponseDTO.setName(patient.getName());
         patientResponseDTO.setAge(patient.getAge());
+        patientResponseDTO.setDateOfBirth(patient.getDateOfBirth());
         patientResponseDTO.setGender(patient.getGender());
         patientResponseDTO.setAddress(patient.getAddress());
         patientResponseDTO.setPhoneNumber(patient.getPhoneNumber());

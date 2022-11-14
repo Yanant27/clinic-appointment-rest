@@ -47,6 +47,7 @@ public class DoctorMapperDecorator implements DoctorMapper {
         // Update data
         doctor.setName(doctorRequestDTO.getName());
         doctor.setAge(doctorRequestDTO.getAge());
+        doctor.setDateOfBirth(doctorRequestDTO.getDateOfBirth());
         doctor.setGender(doctorRequestDTO.getGender());
         doctor.setAddress(doctorRequestDTO.getAddress());
         doctor.setPhoneNumber(doctorRequestDTO.getPhoneNumber());
@@ -64,6 +65,7 @@ public class DoctorMapperDecorator implements DoctorMapper {
         doctorResponseDTO.setId(doctor.getId());
         doctorResponseDTO.setName(doctor.getName());
         doctorResponseDTO.setAge(doctor.getAge());
+        doctorResponseDTO.setDateOfBirth(doctor.getDateOfBirth());
         doctorResponseDTO.setGender(doctor.getGender());
         doctorResponseDTO.setAddress(doctor.getAddress());
         doctorResponseDTO.setPhoneNumber(doctor.getPhoneNumber());

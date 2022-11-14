@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
 import javax.validation.constraints.NotEmpty;
+import java.time.LocalDate;
 
 /**
  * @author Htoo Yanant Khin
@@ -17,6 +18,8 @@ import javax.validation.constraints.NotEmpty;
 public class PersonDTO extends NamedDTO{
 
     private Long age;
+
+    private LocalDate dateOfBirth;
 
     private Gender gender;
 

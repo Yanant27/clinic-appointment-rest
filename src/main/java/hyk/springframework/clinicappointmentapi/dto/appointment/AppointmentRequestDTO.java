@@ -33,6 +33,7 @@ public class AppointmentRequestDTO extends BaseDTO {
      */
     private PatientRequestDTO patientRequestDTO;
 
+    @NotNull
     @Future
     @JsonFormat(pattern="yyyy-MM-dd", shape=JsonFormat.Shape.STRING)
     private LocalDate appointmentDate;
