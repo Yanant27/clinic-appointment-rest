@@ -256,6 +256,7 @@ public class DataLoader implements CommandLineRunner {
                         .schedule(schedule1)
                         .appointmentDate(LocalDate.now().plusDays(3))
                         .appointmentStatus(AppointmentStatus.PENDING)
+                        .creator("admin")
                         .build());
 
         appointmentRepository.save(
@@ -265,6 +266,7 @@ public class DataLoader implements CommandLineRunner {
                         .schedule(schedule2)
                         .appointmentDate(LocalDate.now().plusDays(3))
                         .appointmentStatus(AppointmentStatus.APPROVED)
+                        .creator("admin")
                         .build());
 
         appointmentRepository.save(
@@ -274,6 +276,7 @@ public class DataLoader implements CommandLineRunner {
                         .schedule(schedule3)
                         .appointmentDate(LocalDate.now().plusDays(5))
                         .appointmentStatus(AppointmentStatus.PENDING)
+                        .creator("admin")
                         .build());
 
         appointmentRepository.save(
@@ -283,6 +286,7 @@ public class DataLoader implements CommandLineRunner {
                         .schedule(schedule4)
                         .appointmentDate(LocalDate.now().plusDays(3))
                         .appointmentStatus(AppointmentStatus.PENDING)
+                        .creator("admin")
                         .build());
 
         appointmentRepository.save(
@@ -292,6 +296,7 @@ public class DataLoader implements CommandLineRunner {
                         .schedule(schedule5)
                         .appointmentDate(LocalDate.now().plusDays(6))
                         .appointmentStatus(AppointmentStatus.CANCELLED)
+                        .creator("admin")
                         .build());
 
         appointmentRepository.save(
@@ -301,6 +306,7 @@ public class DataLoader implements CommandLineRunner {
                         .schedule(schedule7)
                         .appointmentDate(LocalDate.now().plusDays(5))
                         .appointmentStatus(AppointmentStatus.PENDING)
+                        .creator("admin")
                         .build());
 
         appointmentRepository.save(
@@ -310,6 +316,7 @@ public class DataLoader implements CommandLineRunner {
                         .schedule(schedule8)
                         .appointmentDate(LocalDate.now().plusDays(4))
                         .appointmentStatus(AppointmentStatus.CANCELLED)
+                        .creator("admin")
                         .build());
 
         appointmentRepository.save(
@@ -319,6 +326,7 @@ public class DataLoader implements CommandLineRunner {
                         .schedule(schedule9)
                         .appointmentDate(LocalDate.now().plusDays(4))
                         .appointmentStatus(AppointmentStatus.PENDING)
+                        .creator("admin")
                         .build());
 
         log.debug("Data loaded");
