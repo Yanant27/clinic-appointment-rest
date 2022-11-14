@@ -6,7 +6,7 @@ In this API,
 - use **DTO Pattern (Data Transfer Object)**.
 - use **mapstruct** for easy map between different object models (e.g. entities and DTOs).
 - create **custom validator** for specified phone number format.
-- write **unit test** for all REST endpoints
+- write **unit test and integration test** for REST endpoints.
 
 ## Requirements
 - JDK 1.8 or higher
@@ -14,7 +14,17 @@ In this API,
 - Maven 3
 
 ## Dependencies
-There are a number of third-party dependencies used in the project. Browse the Maven pom.xml file for details of libraries and versions used.
+- Spring Data JPA
+- Spring Web
+- Spring Boot DevTools
+- Lombok
+- H2 Database
+- MySQL Driver
+- Validation
+- Spring Security Test
+- Spring Boot Test
+
+**Browse the Maven pom.xml file for details of libraries and versions used.**
 
 ## Building the project
 This application use embedded Tomcat 8. Therefore, no Tomcat or JBoss installation is necessary.
