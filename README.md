@@ -14,12 +14,13 @@ In this API,
 - Maven 3
 
 ## Dependencies
-- Spring Data JPA
 - Spring Web
 - Spring Boot DevTools
+- Spring Data JPA
 - Spring Security
 - Json Web Token
 - Lombok
+- MapStruct
 - H2 Database
 - MySQL Driver
 - Validation
