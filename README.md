@@ -39,7 +39,7 @@ This application use embedded Tomcat 8. Therefore, no Tomcat or JBoss installati
     - You can build the project and run the tests by running `mvn clean package`.
     - Once successfully built, you can run by one of these two methods.
     ```    
-        java -jar -Dspring.profiles.active=dev target/clinic-appointment-api-0.0.1-SNAPSHOT.jar
+        java -jar -Dspring.profiles.active=test target/clinic-appointment-api-0.0.1-SNAPSHOT.jar
         or
         mvn spring-boot:run -Drun.arguments="spring.profiles.active=test"
     ```
