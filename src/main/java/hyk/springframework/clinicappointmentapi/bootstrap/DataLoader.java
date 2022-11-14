@@ -181,9 +181,11 @@ public class DataLoader implements CommandLineRunner {
         Schedule schedule10 = Schedule.builder()
                 .dayOfWeek(DayOfWeek.SUNDAY.name())
                 .timeslot("14:00 ~ 15:00")
+                .scheduleStatus(ScheduleStatus.AVAILABLE)
                 .build();
         Schedule schedule11 = Schedule.builder()
                 .dayOfWeek(DayOfWeek.SUNDAY.name())
+                .scheduleStatus(ScheduleStatus.AVAILABLE)
                 .timeslot("15:00 ~ 16:00")
                 .build();
         scheduleRepository.saveAll(List.of(schedule1, schedule2, schedule3, schedule4, schedule5, schedule6,
