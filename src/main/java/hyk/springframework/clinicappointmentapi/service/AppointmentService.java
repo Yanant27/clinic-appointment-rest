@@ -14,7 +14,7 @@ public interface AppointmentService {
 
     AppointmentResponseDTO findAppointmentById(Long appointmentId);
 
-    AppointmentResponseDTO saveAppointment(AppointmentRequestDTO appointmentRequestDTO);
+    AppointmentResponseDTO saveNewAppointment(AppointmentRequestDTO appointmentRequestDTO);
 
     AppointmentResponseDTO updateAppointmentStatus(Long appointmentId, AppointmentUpdateStatusDTO appointmentUpdateStatusDTO);
 

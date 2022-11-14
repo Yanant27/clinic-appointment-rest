@@ -4,6 +4,7 @@ import hyk.springframework.clinicappointmentapi.dto.BaseDTO;
 import hyk.springframework.clinicappointmentapi.enums.ScheduleStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import javax.validation.constraints.NotNull;
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotNull;
  **/
 @Data
 @EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 @SuperBuilder(toBuilder = true)
 public class ScheduleRequestDTO extends BaseDTO {
 

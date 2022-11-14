@@ -51,7 +51,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     @Transactional
-    public AppointmentResponseDTO saveAppointment(AppointmentRequestDTO appointmentRequestDTO) {
+    public AppointmentResponseDTO saveNewAppointment(AppointmentRequestDTO appointmentRequestDTO) {
         // Set default appointment status for new appointment
         appointmentRequestDTO.setAppointmentStatus(AppointmentStatus.PENDING);
         // For new patient, register patient first.

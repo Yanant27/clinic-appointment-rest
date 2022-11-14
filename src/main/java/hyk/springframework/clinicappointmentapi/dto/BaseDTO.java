@@ -8,6 +8,7 @@ import lombok.experimental.SuperBuilder;
  **/
 @Getter
 @Setter
+@NoArgsConstructor
 @SuperBuilder(toBuilder = true)
 public class BaseDTO {
     private Long id;
