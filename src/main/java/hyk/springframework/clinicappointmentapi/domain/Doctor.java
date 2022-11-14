@@ -7,7 +7,6 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +25,9 @@ public class Doctor extends PersonEntity {
 
     private String specialization;
 
-    @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "doctor")
     private List<Schedule> schedules = new ArrayList<>();
 
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.REMOVE)
     private List<Appointment> appointments = new ArrayList<>();
 }

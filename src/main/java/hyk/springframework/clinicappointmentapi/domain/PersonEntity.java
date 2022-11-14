@@ -4,7 +4,10 @@ import hyk.springframework.clinicappointmentapi.enums.Gender;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
+import java.time.LocalDate;
 
 /**
  * @author Htoo Yanant Khin
@@ -15,8 +18,15 @@ import javax.persistence.MappedSuperclass;
 @SuperBuilder(toBuilder = true)
 @MappedSuperclass
 public class PersonEntity extends NamedEntity {
+
     private Long age;
+
+    private LocalDate dateOfBirth;
+
+    @Enumerated(value = EnumType.STRING)
     private Gender gender;
+
     private String address;
+
     private String phoneNumber;
 }
