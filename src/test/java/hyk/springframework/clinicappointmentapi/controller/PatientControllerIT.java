@@ -15,7 +15,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -91,7 +94,10 @@ public class PatientControllerIT {
             mockMvc.perform(get(API_ROOT + "/99999")
                             .contentType(MEDIA_TYPE_JSON)
                             .accept(MEDIA_TYPE_JSON))
-                    .andExpect(status().isNotFound());
+                    .andExpect(status().isNotFound())
+                    .andExpect(result -> assertEquals(
+                            "Patient Not Found. ID: 99999",
+                            Objects.requireNonNull(result.getResolvedException()).getMessage()));
         }
     }
 
@@ -117,6 +123,22 @@ public class PatientControllerIT {
                     .andExpect(jsonPath("$.age", is(24)))
                     .andExpect(jsonPath("$.gender", is("FEMALE")))
                     .andExpect(jsonPath("$.phoneNumber", is("09222222222")));
+        }
+
+        @Test
+        public void saveNewPatient_Unauthorized() throws Exception {
+            PatientResponseDTO newDto = PatientResponseDTO.builder()
+                    .name("New Patient")
+                    .age(24L)
+                    .gender(Gender.FEMALE)
+                    .phoneNumber("09222222222")
+                    .address("No.30, Bo Ta Htaung Township, Yangon").build();
+
+            mockMvc.perform(post(API_ROOT)
+                            .content(JsonStringUtil.asJsonString(newDto))
+                            .contentType(MEDIA_TYPE_JSON)
+                            .accept(MEDIA_TYPE_JSON))
+                    .andExpect(status().isUnauthorized());
         }
 
         @WithMockUser(roles = {"DOCTOR"})
@@ -205,7 +227,10 @@ public class PatientControllerIT {
                             .content(JsonStringUtil.asJsonString(updatedDto))
                             .contentType(MEDIA_TYPE_JSON)
                             .accept(MEDIA_TYPE_JSON))
-                    .andExpect(status().isNotFound());
+                    .andExpect(status().isNotFound())
+                    .andExpect(result -> assertEquals(
+                            "Patient Not Found. ID: 99999",
+                            Objects.requireNonNull(result.getResolvedException()).getMessage()));
         }
     }
 
@@ -218,7 +243,7 @@ public class PatientControllerIT {
             mockMvc.perform(delete(API_ROOT + "/7")
                             .contentType(MEDIA_TYPE_JSON)
                             .accept(MEDIA_TYPE_JSON))
-                    .andExpect(status().is2xxSuccessful());
+                    .andExpect(status().isNoContent());
         }
 
         @Test
@@ -244,7 +269,10 @@ public class PatientControllerIT {
             mockMvc.perform(delete(API_ROOT + "/99999")
                             .contentType(MEDIA_TYPE_JSON)
                             .accept(MEDIA_TYPE_JSON))
-                    .andExpect(status().isNotFound());
+                    .andExpect(status().isNotFound())
+                    .andExpect(result -> assertEquals(
+                            "Patient Not Found. ID: 99999",
+                            Objects.requireNonNull(result.getResolvedException()).getMessage()));
         }
     }
 }

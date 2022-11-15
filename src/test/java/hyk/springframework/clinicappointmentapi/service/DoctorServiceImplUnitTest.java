@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
  * @author Htoo Yanant Khin
  **/
 @ExtendWith(MockitoExtension.class)
-class DoctorServiceImplTest {
+class DoctorServiceImplUnitTest {
     @Mock
     DoctorRepository doctorRepository;
 
@@ -193,13 +193,13 @@ class DoctorServiceImplTest {
                 Doctor.builder().specialization("Cardiology").build());
 
         // Mock method call
-        when(doctorRepository.findAllBySpecialization(anyString())).thenReturn(doctors);
+        when(doctorRepository.findAllBySpecializationEqualsIgnoreCase(anyString())).thenReturn(doctors);
 
         List<DoctorResponseDTO> result = doctorService.findAllDoctorsBySpecialization("Cardiology");
 
         // Verify
         assertEquals(2, result.size());
-        verify(doctorRepository, times(1)).findAllBySpecialization(anyString());
+        verify(doctorRepository, times(1)).findAllBySpecializationEqualsIgnoreCase(anyString());
         verify(doctorMapper, times(result.size())).doctorToDoctorResponseDto(any());
     }
 }

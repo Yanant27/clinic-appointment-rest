@@ -28,7 +28,8 @@ import static org.mockito.Mockito.*;
  * @author Htoo Yanant Khin
  **/
 @ExtendWith(MockitoExtension.class)
-class PatientServiceImplTest {
+class PatientServiceImplUnitTest
+{
     @Mock
     PatientRepository patientRepository;
 

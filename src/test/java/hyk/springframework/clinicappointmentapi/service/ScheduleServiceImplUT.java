@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
  * @author Htoo Yanant Khin
  **/
 @ExtendWith(MockitoExtension.class)
-class ScheduleServiceImplTest {
+class ScheduleServiceImplUnitTest {
     @Mock
     ScheduleRepository scheduleRepository;
 
@@ -256,7 +256,7 @@ class ScheduleServiceImplTest {
                 scheduleService.logicalDeleteScheduleByDoctorId(100L, 200L));
 
         // Verify
-        assertEquals("Schedule Not Found. ID: 100", exception.getMessage());
+        assertEquals("Schedule Not Found. Schedule ID: 100, Doctor ID: 200", exception.getMessage());
         verify(scheduleRepository, times(1)).findByIdAndDoctorId(anyLong(), anyLong());
     }
 }

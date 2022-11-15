@@ -33,7 +33,7 @@ import static org.mockito.Mockito.*;
  * @author Htoo Yanant Khin
  **/
 @ExtendWith(MockitoExtension.class)
-class AppointmentServiceImplTest {
+class AppointmentServiceImplUnitTest {
     @Mock
     AppointmentRepository appointmentRepository;
 
