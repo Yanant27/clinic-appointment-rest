@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Transactional
 @ActiveProfiles("test")
-//@TestPropertySource("/application-test.properties")
+//@TestPropertySource("/application-dev.properties")
 public class PatientControllerIT {
     private final String API_ROOT = "/api/v1/patients";
 

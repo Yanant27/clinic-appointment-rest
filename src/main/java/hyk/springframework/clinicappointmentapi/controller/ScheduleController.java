@@ -69,6 +69,6 @@ public class ScheduleController {
     @DeleteMapping("/{scheduleId}/doctors/{doctorId}")
     public ResponseEntity<Void> logicalDeleteScheduleByDoctorId(@PathVariable Long scheduleId, @PathVariable Long doctorId) {
         scheduleService.logicalDeleteScheduleByDoctorId(scheduleId, doctorId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

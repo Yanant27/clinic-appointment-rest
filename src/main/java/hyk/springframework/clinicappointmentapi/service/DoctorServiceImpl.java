@@ -4,6 +4,7 @@ import hyk.springframework.clinicappointmentapi.domain.Doctor;
 import hyk.springframework.clinicappointmentapi.dto.doctor.DoctorRequestDTO;
 import hyk.springframework.clinicappointmentapi.dto.doctor.DoctorResponseDTO;
 import hyk.springframework.clinicappointmentapi.dto.mapper.DoctorMapper;
+import hyk.springframework.clinicappointmentapi.enums.ScheduleStatus;
 import hyk.springframework.clinicappointmentapi.exception.NotFoundException;
 import hyk.springframework.clinicappointmentapi.repository.DoctorRepository;
 import hyk.springframework.clinicappointmentapi.repository.ScheduleRepository;
@@ -73,7 +74,10 @@ public class DoctorServiceImpl implements DoctorService {
                 .ifPresentOrElse(appointment -> {
                     // Logically delete all schedules for doctor
                     scheduleRepository.findAllByDoctorId(doctorId)
-                            .forEach(schedule -> schedule.setDoctor(null));
+                            .forEach(schedule -> {
+                                schedule.setDoctor(null);
+                                schedule.setScheduleStatus(ScheduleStatus.AVAILABLE);
+                            });
                     // Permanently delete doctor
                     doctorRepository.deleteById(doctorId);
                 }, () -> {
@@ -83,7 +87,7 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public List<DoctorResponseDTO> findAllDoctorsBySpecialization(String specialization) {
-        return doctorRepository.findAllBySpecialization(specialization).stream()
+        return doctorRepository.findAllBySpecializationEqualsIgnoreCase(specialization).stream()
                 .map(doctorMapper::doctorToDoctorResponseDto)
                 .collect(Collectors.toList());
     }

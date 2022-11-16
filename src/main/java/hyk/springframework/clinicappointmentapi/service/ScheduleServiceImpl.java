@@ -98,7 +98,8 @@ public class ScheduleServiceImpl implements ScheduleService {
                     // Delete all appointments booked at this schedule
                     appointmentRepository.deleteAll(appointmentRepository.findAllByScheduleId(scheduleId));
                 }, () -> {
-                    throw new NotFoundException("Schedule Not Found. ID: " + scheduleId);
+                    throw new NotFoundException("Schedule Not Found. Schedule ID: " + scheduleId
+                    + ", Doctor ID: " + doctorId);
                 });
     }
 }
