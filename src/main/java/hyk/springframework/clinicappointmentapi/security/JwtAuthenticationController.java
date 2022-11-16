@@ -1,15 +1,13 @@
 package hyk.springframework.clinicappointmentapi.security;
 
-import hyk.springframework.clinicappointmentapi.web.dto.security.JwtRequest;
-import hyk.springframework.clinicappointmentapi.web.dto.security.JwtResponse;
+import hyk.springframework.clinicappointmentapi.dto.security.JwtRequest;
+import hyk.springframework.clinicappointmentapi.dto.security.JwtResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
