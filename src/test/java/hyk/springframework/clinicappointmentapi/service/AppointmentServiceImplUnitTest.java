@@ -13,7 +13,6 @@ import hyk.springframework.clinicappointmentapi.enums.AppointmentStatus;
 import hyk.springframework.clinicappointmentapi.exception.NotFoundException;
 import hyk.springframework.clinicappointmentapi.repository.AppointmentRepository;
 import hyk.springframework.clinicappointmentapi.repository.PatientRepository;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -133,7 +132,6 @@ class AppointmentServiceImplUnitTest {
         verify(appointmentRepository, times(1)).save(any());
     }
 
-    @Disabled
     @Test
     @DisplayName("Saving new appointment - Old Patient")
     void saveAppointment_Old_Patient() {

@@ -5,7 +5,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -35,21 +34,21 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
     public final ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException exception, WebRequest request) {
         ErrorResponse error = new ErrorResponse(exception.getLocalizedMessage());
         System.out.println(request.getContextPath());
-        return new ResponseEntity(error, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler({BadCredentialsException.class})
     public final ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException exception, WebRequest request) {
         ErrorResponse error = new ErrorResponse(exception.getLocalizedMessage());
         System.out.println(request.getContextPath());
-        return new ResponseEntity(error, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(NotFoundException.class)
     public final ResponseEntity<Object> handleUserNotFoundException(NotFoundException exception, WebRequest request) {
         ErrorResponse error = new ErrorResponse(exception.getLocalizedMessage());
         log.debug(((ServletWebRequest) request).getRequest().toString());
-        return new ResponseEntity(error, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     @Override
@@ -61,6 +60,6 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
             validationErrors.put(fieldName, message);
         });
         FieldValidationErrorResponse error = new FieldValidationErrorResponse("Validation Failed", validationErrors);
-        return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 }
