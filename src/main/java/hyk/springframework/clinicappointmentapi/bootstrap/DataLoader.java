@@ -31,7 +31,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-@Profile("test")
+@Profile({"test", "dev"})
 public class DataLoader implements CommandLineRunner {
 
     private final ScheduleRepository scheduleRepository;
