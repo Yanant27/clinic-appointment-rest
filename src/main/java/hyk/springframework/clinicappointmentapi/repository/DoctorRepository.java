@@ -9,5 +9,5 @@ import java.util.List;
  * @author Htoo Yanant Khin
  **/
 public interface DoctorRepository extends JpaRepository<Doctor, Long> {
-    List<Doctor> findAllBySpecialization(String specialization);
+    List<Doctor> findAllBySpecializationEqualsIgnoreCase(String specialization);
 }
