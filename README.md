@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/Yanant27/clinic-appointment-rest.svg?style=svg)](https://app.circleci.com/pipelines/github/Yanant27/clinic-appointment-rest)
+[![CircleCI](https://circleci.com/gh/Yanant27/clinic-appointment-rest.svg?style=shield)](https://app.circleci.com/pipelines/github/Yanant27/clinic-appointment-rest)
 
 # Secured Clinic Appointment REST API with JWT Authentication
 Spring Boot REST API for creating schedule for doctors, creating appointments to see doctors, adding and updating information of doctors and patients.
