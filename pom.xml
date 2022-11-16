@@ -16,6 +16,8 @@
     <properties>
         <java.version>11</java.version>
         <org.mapstruct.version>1.5.1.Final</org.mapstruct.version>
+<!--        <springfox.version>3.0.0</springfox.version>-->
+<!--        <org.springdoc.version>1.6.12</org.springdoc.version>-->
     </properties>
     <dependencies>
         <dependency>
@@ -92,10 +94,16 @@
             <artifactId>jjwt</artifactId>
             <version>0.9.1</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-hateoas</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springdoc</groupId>-->
+<!--            <artifactId>springdoc-openapi-ui</artifactId>-->
+<!--            <version>${org.springdoc.version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.springdoc</groupId>-->
+<!--            <artifactId>springdoc-openapi-security</artifactId>-->
+<!--            <version>${org.springdoc.version}</version>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>
@@ -132,5 +140,13 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+    </profiles>
 
 </project>
