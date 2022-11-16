@@ -45,7 +45,7 @@ jobs:
             # run tests!
       - run: mvn -Denv=test test
       
-      # - run: mvn -Denv=test integration-test
+      - run: mvn -Denv=test integration-test
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
