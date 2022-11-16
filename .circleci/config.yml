@@ -29,23 +29,22 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
-      - run: mvn install dependency:go-offline -Dmaven.test.skip=true
+      - run: 
+          name: Install Plugin
+          command: mvn install dependency:go-offline -Dmaven.test.skip=true
+        
       - save_cache:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
       # Use mvn clean and package as the standard maven build phase
-      # - run:
-      #     name: Build
-      #     command: mvn -B -DskipTests clean package
-      # Then run your tests!
-      # - run:
-      #     name: Test
-      #     command: mvn test
-            # run tests!
-      - run: mvn -Denv=test test
+      - run:
+          name: Building Project
+          command: mvn clean package -Dmaven.test.skip=true
       
-      - run: mvn -Denv=test integration-test
+      - run:
+          name: Running Test 
+          command: mvn -Denv=test integration-test
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
