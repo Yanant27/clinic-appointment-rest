@@ -9,7 +9,8 @@ In this API,
 - use **mapstruct** for easy map between different object models (e.g. entities and DTOs).
 - create **custom validator** for specified phone number format.
 - write **unit test and integration test** for REST endpoints.
-- use **CircleCI** for CI/CD workflow.
+- use **JaCoCo** for code coverage (both UT and IT)
+- apply **CircleCI** for CI/CD workflow.
 
 ## Requirements
 - JDK 1.8 or higher
