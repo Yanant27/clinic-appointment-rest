@@ -1,6 +1,5 @@
-package hyk.springframework.clinicappointmentapi.dto.doctor;
+package hyk.springframework.clinicappointmentapi.dto.schedule;
 
-import hyk.springframework.clinicappointmentapi.dto.PersonDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -15,11 +14,7 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-public class DoctorRequestDTO extends PersonDTO {
-
+public class ScheduleUpdateDTO extends ScheduleRegistrationDTO {
     @NotNull
-    private String qualifications;
-
-    @NotNull
-    private String specialization;
+    private Long id;
 }

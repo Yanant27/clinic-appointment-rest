@@ -18,9 +18,6 @@ import java.time.LocalDate;
 @SuperBuilder(toBuilder = true)
 @MappedSuperclass
 public class PersonEntity extends NamedEntity {
-
-    private Long age;
-
     private LocalDate dateOfBirth;
 
     @Enumerated(value = EnumType.STRING)

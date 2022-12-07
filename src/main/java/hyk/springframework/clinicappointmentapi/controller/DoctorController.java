@@ -1,6 +1,7 @@
 package hyk.springframework.clinicappointmentapi.controller;
 
-import hyk.springframework.clinicappointmentapi.dto.doctor.DoctorRequestDTO;
+import hyk.springframework.clinicappointmentapi.dto.doctor.DoctorRegistrationDTO;
+import hyk.springframework.clinicappointmentapi.dto.doctor.DoctorUpdateDTO;
 import hyk.springframework.clinicappointmentapi.dto.doctor.DoctorResponseDTO;
 import hyk.springframework.clinicappointmentapi.service.DoctorService;
 import lombok.RequiredArgsConstructor;
@@ -30,38 +31,40 @@ public class DoctorController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR', 'PATIENT')")
+    @GetMapping("/specializations/{specialization}")
+    public ResponseEntity<List<DoctorResponseDTO>> findAllDoctorsBySpecialization(@PathVariable String specialization) {
+        return new ResponseEntity<>(doctorService.findAllDoctorsBySpecialization(specialization), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR', 'PATIENT')")
     @GetMapping("/{doctorId}")
     public ResponseEntity<DoctorResponseDTO> findDoctorById(@PathVariable Long doctorId) {
         DoctorResponseDTO returnDto = doctorService.findDoctorById(doctorId);
         return new ResponseEntity<>(returnDto, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','DOCTOR')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<DoctorResponseDTO> saveNewDoctor(@Valid @RequestBody DoctorRequestDTO doctorRequestDTO) {
+    public ResponseEntity<DoctorResponseDTO> registerDoctor(@Valid @RequestBody DoctorRegistrationDTO doctorRegistrationDTO) {
         HttpHeaders headers = new HttpHeaders();
-        DoctorResponseDTO savedDto = doctorService.saveNewDoctor(doctorRequestDTO);
+        DoctorResponseDTO savedDto = doctorService.saveNewDoctor(doctorRegistrationDTO);
         headers.setLocation(UriComponentsBuilder.newInstance()
                 .path("/api/v1/doctors/{doctorId}").buildAndExpand(savedDto.getId()).toUri());
         return new ResponseEntity<>(savedDto, headers, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','DOCTOR')")
+    @PreAuthorize("hasRole('ADMIN') or " +
+            "(hasRole('DOCTOR') and " +
+            "@doctorAuthorizationManger.doctorIdMatches(authentication, #doctorId))")
     @PutMapping("/{doctorId}")
-    public ResponseEntity<DoctorResponseDTO> updateDoctor(@PathVariable Long doctorId, @Valid @RequestBody DoctorRequestDTO doctorRequestDTO) {
-        return new ResponseEntity<>(doctorService.updateDoctor(doctorId, doctorRequestDTO), HttpStatus.OK);
+    public ResponseEntity<DoctorResponseDTO> updateDoctor(@PathVariable Long doctorId, @Valid @RequestBody DoctorUpdateDTO doctorUpdateDTO) {
+        return new ResponseEntity<>(doctorService.updateDoctor(doctorId, doctorUpdateDTO), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{doctorId}")
     public ResponseEntity<Void> deleteDoctorById(@PathVariable Long doctorId) {
         doctorService.deleteDoctorById(doctorId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR', 'PATIENT')")
-    @GetMapping("/specializations/{specialization}")
-    public ResponseEntity<List<DoctorResponseDTO>> findAllDoctorsBySpecialization(@PathVariable String specialization) {
-        return new ResponseEntity<>(doctorService.findAllDoctorsBySpecialization(specialization), HttpStatus.OK);
     }
 }

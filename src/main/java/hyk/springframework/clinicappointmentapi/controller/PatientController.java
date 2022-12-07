@@ -1,7 +1,8 @@
 
 package hyk.springframework.clinicappointmentapi.controller;
 
-import hyk.springframework.clinicappointmentapi.dto.patient.PatientRequestDTO;
+import hyk.springframework.clinicappointmentapi.dto.patient.PatientRegistrationDTO;
+import hyk.springframework.clinicappointmentapi.dto.patient.PatientUpdateDTO;
 import hyk.springframework.clinicappointmentapi.dto.patient.PatientResponseDTO;
 import hyk.springframework.clinicappointmentapi.service.PatientService;
 import lombok.RequiredArgsConstructor;
@@ -37,23 +38,24 @@ public class PatientController {
         return new ResponseEntity<>(returnDto, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','PATIENT')")
     @PostMapping
-    public ResponseEntity<PatientResponseDTO> saveNewPatient(@Valid @RequestBody PatientRequestDTO patientRequestDTO) {
+    public ResponseEntity<PatientResponseDTO> registerPatient(@Valid @RequestBody PatientRegistrationDTO patientRegistrationDTO) {
         HttpHeaders headers = new HttpHeaders();
-        PatientResponseDTO savedDto = patientService.saveNewPatient(patientRequestDTO);
+        PatientResponseDTO savedDto = patientService.saveNewPatient(patientRegistrationDTO);
         headers.setLocation(UriComponentsBuilder.newInstance()
                 .path("/api/v1/patients/{patientId}").buildAndExpand(savedDto.getId()).toUri());
         return new ResponseEntity<>(savedDto, headers, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','PATIENT')")
-    @PutMapping ("/{patientId}")
-    public ResponseEntity<PatientResponseDTO> updatePatient(@PathVariable Long patientId, @Valid @RequestBody PatientRequestDTO patientRequestDTO) {
-        return new ResponseEntity<>(patientService.updatePatient(patientId, patientRequestDTO), HttpStatus.OK);
+    @PreAuthorize("hasRole('ADMIN') or " +
+            "(hasRole('PATIENT') and " +
+            "@patientAuthorizationManger.patientIdMatches(authentication, #patientId))")
+    @PutMapping("/{patientId}")
+    public ResponseEntity<PatientResponseDTO> updatePatient(@PathVariable Long patientId, @Valid @RequestBody PatientUpdateDTO patientUpdateDTO) {
+        return new ResponseEntity<>(patientService.updatePatient(patientId, patientUpdateDTO), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{patientId}")
     public ResponseEntity<Void> deletePatientById(@PathVariable Long patientId) {
         patientService.deletePatientById(patientId);

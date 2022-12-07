@@ -1,6 +1,6 @@
 package hyk.springframework.clinicappointmentapi.service;
 
-import hyk.springframework.clinicappointmentapi.dto.appointment.AppointmentRequestDTO;
+import hyk.springframework.clinicappointmentapi.dto.appointment.AppointmentRegistrationDTO;
 import hyk.springframework.clinicappointmentapi.dto.appointment.AppointmentResponseDTO;
 import hyk.springframework.clinicappointmentapi.dto.appointment.AppointmentUpdateStatusDTO;
 
@@ -14,7 +14,7 @@ public interface AppointmentService {
 
     AppointmentResponseDTO findAppointmentById(Long appointmentId);
 
-    AppointmentResponseDTO saveNewAppointment(AppointmentRequestDTO appointmentRequestDTO);
+    AppointmentResponseDTO saveNewAppointment(AppointmentRegistrationDTO appointmentRegistrationDTO);
 
     AppointmentResponseDTO updateAppointmentStatus(Long appointmentId, AppointmentUpdateStatusDTO appointmentUpdateStatusDTO);
 

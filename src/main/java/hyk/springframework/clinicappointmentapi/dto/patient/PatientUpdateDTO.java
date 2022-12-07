@@ -1,11 +1,12 @@
-package hyk.springframework.clinicappointmentapi.dto;
+package hyk.springframework.clinicappointmentapi.dto.patient;
 
+import hyk.springframework.clinicappointmentapi.dto.PersonDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author Htoo Yanant Khin
@@ -14,7 +15,7 @@ import javax.validation.constraints.NotEmpty;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-public class NamedDTO extends BaseDTO{
-    @NotEmpty
-    private String name;
+public class PatientUpdateDTO extends PersonDTO {
+    @NotNull
+    private Long id;
 }

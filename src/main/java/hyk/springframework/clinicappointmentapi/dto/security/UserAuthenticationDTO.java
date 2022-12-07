@@ -1,19 +1,22 @@
 package hyk.springframework.clinicappointmentapi.dto.security;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
-import java.io.Serializable;
 
 /**
+ * DTO for user log in and update username and password.
+ *
  * @author Htoo Yanant Khin
  **/
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class JwtRequest implements Serializable {
-    private static final long serialVersionUID = 2709469567051836719L;
+@Builder
+public class UserAuthenticationDTO {
     @NotEmpty
     private String username;
 

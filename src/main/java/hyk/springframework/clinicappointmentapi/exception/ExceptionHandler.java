@@ -8,7 +8,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -20,7 +20,7 @@ import java.util.Map;
  * @author Htoo Yanant Khin
  **/
 @Slf4j
-@ControllerAdvice
+@RestControllerAdvice
 public class ExceptionHandler extends ResponseEntityExceptionHandler {
 
 //    @org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
@@ -44,11 +44,18 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 
-    @org.springframework.web.bind.annotation.ExceptionHandler(NotFoundException.class)
-    public final ResponseEntity<Object> handleUserNotFoundException(NotFoundException exception, WebRequest request) {
+    @org.springframework.web.bind.annotation.ExceptionHandler(ResourceNotFoundException.class)
+    public final ResponseEntity<Object> handleUserNotFoundException(ResourceNotFoundException exception, WebRequest request) {
         ErrorResponse error = new ErrorResponse(exception.getLocalizedMessage());
         log.debug(((ServletWebRequest) request).getRequest().toString());
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(ResourceAlreadyExistException.class)
+    public final ResponseEntity<Object> handleResourceAlreadyExistException(ResourceAlreadyExistException exception, WebRequest request) {
+        ErrorResponse error = new ErrorResponse(exception.getLocalizedMessage());
+        log.debug(((ServletWebRequest) request).getRequest().toString());
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
     @Override

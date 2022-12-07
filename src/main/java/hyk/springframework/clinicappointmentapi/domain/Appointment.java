@@ -10,7 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 /**
@@ -28,15 +27,10 @@ public class Appointment extends BaseEntity {
     @ManyToOne
     private Patient patient;
 
-    @ManyToOne
-    private Schedule schedule;
-
     private LocalDate appointmentDate;
 
     @Enumerated(value = EnumType.STRING)
     private AppointmentStatus appointmentStatus;
 
-    // logged in username or email
-    @NotNull
-    private String creator;
+    private String timeslot;
 }

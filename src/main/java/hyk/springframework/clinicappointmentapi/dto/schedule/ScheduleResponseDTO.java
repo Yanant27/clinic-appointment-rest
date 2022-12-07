@@ -12,9 +12,8 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-public class ScheduleResponseDTO extends ScheduleRequestDTO {
+public class ScheduleResponseDTO extends ScheduleUpdateDTO {
+    private String createdBy;
 
-    private String doctorName;
-
-    private String specialization;
+    private String modifiedBy;
 }

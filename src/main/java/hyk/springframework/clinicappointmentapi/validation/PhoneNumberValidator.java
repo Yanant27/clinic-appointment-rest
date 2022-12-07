@@ -1,7 +1,5 @@
 package hyk.springframework.clinicappointmentapi.validation;
 
-import lombok.extern.slf4j.Slf4j;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.regex.Matcher;
@@ -19,7 +17,11 @@ public class PhoneNumberValidator implements ConstraintValidator<ValidPhoneNumbe
 
     @Override
     public boolean isValid(final String phoneNumber, final ConstraintValidatorContext context) {
-        return (validatePhoneNumber(phoneNumber));
+        if (phoneNumber == null || phoneNumber.isEmpty()) {
+            return false;
+        } else {
+            return (validatePhoneNumber(phoneNumber));
+        }
     }
 
     private boolean validatePhoneNumber(final String phoneNumber) {

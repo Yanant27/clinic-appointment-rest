@@ -1,5 +1,7 @@
 package hyk.springframework.clinicappointmentapi.domain.security;
 
+import hyk.springframework.clinicappointmentapi.domain.Doctor;
+import hyk.springframework.clinicappointmentapi.domain.Patient;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -24,15 +26,21 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
-    private static final long serialVersionUID = 1644686641237167380L;
+    private static final long serialVersionUID = -6524846385887468939L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     private String username;
 
     private String password;
+
+    @OneToOne(mappedBy = "user")
+    private Doctor doctor;
+
+    @OneToOne(mappedBy = "user")
+    private Patient patient;
 
     @Singular // use with singular form "authority"
     /*

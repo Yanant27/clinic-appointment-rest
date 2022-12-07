@@ -1,7 +1,8 @@
 package hyk.springframework.clinicappointmentapi.service;
 
-import hyk.springframework.clinicappointmentapi.dto.schedule.ScheduleRequestDTO;
+import hyk.springframework.clinicappointmentapi.dto.schedule.ScheduleUpdateDTO;
 import hyk.springframework.clinicappointmentapi.dto.schedule.ScheduleResponseDTO;
+import hyk.springframework.clinicappointmentapi.dto.schedule.ScheduleRegistrationDTO;
 
 import java.util.List;
 
@@ -12,13 +13,11 @@ public interface ScheduleService {
     List<ScheduleResponseDTO> findAllSchedules();
     ScheduleResponseDTO findScheduleById(Long scheduleId);
 
-    ScheduleResponseDTO saveNewSchedule(ScheduleRequestDTO scheduleRequestDTO);
+    ScheduleResponseDTO saveNewSchedule(ScheduleRegistrationDTO scheduleRegistrationDTO);
 
-    ScheduleResponseDTO updateSchedule(Long scheduleId, ScheduleRequestDTO scheduleRequestDTO);
+    ScheduleResponseDTO updateSchedule(Long scheduleId, ScheduleUpdateDTO scheduleUpdateDTO);
 
     void deleteScheduleById(Long scheduleId);
 
     List<ScheduleResponseDTO> findAllSchedulesByDoctorId(Long doctorId);
-
-    void logicalDeleteScheduleByDoctorId(Long scheduleId, Long doctorId);
 }

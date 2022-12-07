@@ -1,12 +1,12 @@
 package hyk.springframework.clinicappointmentapi.domain;
 
-import hyk.springframework.clinicappointmentapi.enums.ScheduleStatus;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 
 /**
  * @author Htoo Yanant Khin
@@ -22,12 +22,6 @@ public class Schedule extends BaseEntity {
 
     private String timeslot;
 
-    @Enumerated(value = EnumType.STRING)
-    private ScheduleStatus scheduleStatus;
-
     @ManyToOne
     private Doctor doctor;
-
-    @OneToMany(mappedBy = "schedule", cascade = CascadeType.REMOVE)
-    private List<Appointment> appointments = new ArrayList<>();
 }

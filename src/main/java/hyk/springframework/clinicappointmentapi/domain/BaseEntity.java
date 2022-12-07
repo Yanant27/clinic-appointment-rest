@@ -56,6 +56,10 @@ public class BaseEntity {
     @UpdateTimestamp
     private Timestamp lastModifiedDate;
 
+    private String createdBy;
+
+    private String modifiedBy;
+
     public boolean isNew() {
         return this.id == null;
     }

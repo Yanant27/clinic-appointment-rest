@@ -3,7 +3,6 @@ package hyk.springframework.clinicappointmentapi.dto;
 import hyk.springframework.clinicappointmentapi.enums.Gender;
 import hyk.springframework.clinicappointmentapi.validation.ValidPhoneNumber;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -14,12 +13,11 @@ import java.time.LocalDate;
  * @author Htoo Yanant Khin
  **/
 @Data
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-public class PersonDTO extends NamedDTO{
-
-    private Long age;
+public class PersonDTO {
+    @NotEmpty
+    private String name;
 
     private LocalDate dateOfBirth;
 

@@ -6,6 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @author Htoo Yanant Khin
  **/
@@ -13,5 +15,10 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-public class PatientRequestDTO extends PersonDTO {
+public class PatientRegistrationDTO extends PersonDTO {
+    @NotNull
+    private String username;
+
+    @NotNull
+    private String password;
 }
