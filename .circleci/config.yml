@@ -40,11 +40,12 @@ jobs:
       # Use mvn clean and package as the standard maven build phase
       - run:
           name: Building Project
-          command: mvn clean package -Dmaven.test.skip=true
+          command: mvn clean package -D maven.test.skip=true
       
       - run:
-          name: Running Test 
-          command: mvn -Denv=test integration-test
+          name: Running Test
+          command: mvn integration-test -D spring-boot.run.profiles=test
+    #          command: mvn -Denv=test integration-test
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
