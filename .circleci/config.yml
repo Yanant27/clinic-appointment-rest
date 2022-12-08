@@ -48,7 +48,7 @@ jobs:
       - browser-tools/install-browser-tools
       - run : mvn test
       - store_artifacts:
-          path:  target/coverage-reports
+          path:  target/site/jacoco-ut
       # - run:
       #     name: Running Test
       #     command: mvn integration-test -D spring-boot.run.profiles=test
